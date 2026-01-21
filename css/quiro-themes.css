@@ -1,0 +1,673 @@
+/* ============================================
+   QURIO THEMES - LUXURY REAL ESTATE CRM
+   Version: 1.0.0
+   ============================================ */
+
+/* ============================================
+   BASE THEME VARIABLES (Light/Default)
+   ============================================ */
+:root {
+  /* Primary Colors - Navy */
+  --ql-primary: #1a2332;
+  --ql-primary-light: #2d3e50;
+  --ql-primary-dark: #0f1722;
+  
+  /* Accent Colors - Gold */
+  --ql-accent: #c9a961;
+  --ql-accent-light: #d4b976;
+  --ql-accent-dark: #b89750;
+  
+  /* Backgrounds */
+  --ql-background: #ffffff;
+  --ql-surface: #f8f9fa;
+  --ql-surface-elevated: #ffffff;
+  
+  /* Text */
+  --ql-text-primary: #1a2332;
+  --ql-text-secondary: #6c757d;
+  --ql-text-tertiary: #adb5bd;
+  
+  /* Borders */
+  --ql-border: #e9ecef;
+  --ql-border-light: #f1f3f5;
+  
+  /* Status Colors */
+  --ql-success: #28a745;
+  --ql-warning: #ffc107;
+  --ql-danger: #dc3545;
+  --ql-info: #17a2b8;
+  
+  /* Typography */
+  --ql-font-heading: 'Playfair Display', serif;
+  --ql-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  
+  /* Spacing */
+  --ql-radius: 8px;
+  --ql-radius-sm: 4px;
+  --ql-radius-lg: 12px;
+  
+  /* Shadows */
+  --ql-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --ql-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --ql-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  
+  /* Transitions */
+  --ql-transition: all 0.2s ease;
+}
+
+/* ============================================
+   DARK LUXURY THEME
+   ============================================ */
+[data-ql-theme="dark"] {
+  /* Inverted: Gold becomes primary */
+  --ql-primary: #c9a961;
+  --ql-primary-light: #d4b976;
+  --ql-primary-dark: #b89750;
+  
+  /* Navy becomes accent */
+  --ql-accent: #1a2332;
+  --ql-accent-light: #2d3e50;
+  --ql-accent-dark: #0f1722;
+  
+  /* Dark backgrounds */
+  --ql-background: #0f1722;
+  --ql-surface: #1a2332;
+  --ql-surface-elevated: #2d3e50;
+  
+  /* Light text */
+  --ql-text-primary: #f8f9fa;
+  --ql-text-secondary: #adb5bd;
+  --ql-text-tertiary: #6c757d;
+  
+  /* Darker borders */
+  --ql-border: #2d3e50;
+  --ql-border-light: #1a2332;
+  
+  /* Adjusted shadows for dark mode */
+  --ql-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --ql-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --ql-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   MODERN MINIMALIST THEME
+   ============================================ */
+[data-ql-theme="minimalist"] {
+  /* Pure black and white */
+  --ql-primary: #000000;
+  --ql-primary-light: #333333;
+  --ql-primary-dark: #000000;
+  
+  /* Red accent */
+  --ql-accent: #ff6b6b;
+  --ql-accent-light: #ff8787;
+  --ql-accent-dark: #ff5252;
+  
+  /* Clean backgrounds */
+  --ql-background: #ffffff;
+  --ql-surface: #fafafa;
+  --ql-surface-elevated: #ffffff;
+  
+  /* Strong contrast text */
+  --ql-text-primary: #000000;
+  --ql-text-secondary: #666666;
+  --ql-text-tertiary: #999999;
+  
+  /* Subtle borders */
+  --ql-border: #e0e0e0;
+  --ql-border-light: #f5f5f5;
+  
+  /* Minimal radius */
+  --ql-radius: 2px;
+  --ql-radius-sm: 1px;
+  --ql-radius-lg: 4px;
+}
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+
+body {
+  background-color: var(--ql-background) !important;
+  color: var(--ql-text-primary) !important;
+  font-family: var(--ql-font-body) !important;
+  transition: var(--ql-transition) !important;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6,
+.hl_header,
+.hl_page-header,
+.page-header,
+.section-header {
+  font-family: var(--ql-font-heading) !important;
+  color: var(--ql-text-primary) !important;
+}
+
+/* ============================================
+   LAYOUT & NAVIGATION
+   ============================================ */
+
+/* Main sidebar/navigation */
+.hl_nav-left,
+.hl_side-nav,
+.sidebar,
+.main-sidebar,
+nav.sidebar {
+  background-color: var(--ql-surface) !important;
+  border-right: 1px solid var(--ql-border) !important;
+}
+
+/* Top navigation bar */
+.hl_top-nav,
+.top-navbar,
+.main-header {
+  background-color: var(--ql-surface-elevated) !important;
+  border-bottom: 1px solid var(--ql-border) !important;
+}
+
+/* Main content area */
+.hl_main-content,
+.main-content,
+.content-wrapper {
+  background-color: var(--ql-background) !important;
+}
+
+/* ============================================
+   CARDS & SURFACES
+   ============================================ */
+
+.hl_card,
+.card,
+.hl_panel,
+.panel,
+.box,
+.widget {
+  background-color: var(--ql-surface-elevated) !important;
+  border: 1px solid var(--ql-border) !important;
+  border-radius: var(--ql-radius) !important;
+  box-shadow: var(--ql-shadow-sm) !important;
+  transition: var(--ql-transition) !important;
+}
+
+.card-header,
+.hl_card-header {
+  background-color: var(--ql-surface) !important;
+  border-bottom: 1px solid var(--ql-border) !important;
+  color: var(--ql-text-primary) !important;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+/* Primary buttons */
+.btn-primary,
+.hl_btn-primary,
+button[class*="primary"] {
+  background-color: var(--ql-primary) !important;
+  border-color: var(--ql-primary) !important;
+  color: #ffffff !important;
+  border-radius: var(--ql-radius-sm) !important;
+  transition: var(--ql-transition) !important;
+}
+
+.btn-primary:hover,
+.hl_btn-primary:hover,
+button[class*="primary"]:hover {
+  background-color: var(--ql-primary-dark) !important;
+  border-color: var(--ql-primary-dark) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--ql-shadow-md) !important;
+}
+
+/* Accent/secondary buttons */
+.btn-accent,
+.btn-secondary,
+.hl_btn-accent {
+  background-color: var(--ql-accent) !important;
+  border-color: var(--ql-accent) !important;
+  color: var(--ql-primary) !important;
+  border-radius: var(--ql-radius-sm) !important;
+}
+
+.btn-accent:hover,
+.btn-secondary:hover {
+  background-color: var(--ql-accent-dark) !important;
+  border-color: var(--ql-accent-dark) !important;
+}
+
+/* Success buttons */
+.btn-success {
+  background-color: var(--ql-success) !important;
+  border-color: var(--ql-success) !important;
+}
+
+/* Danger buttons */
+.btn-danger {
+  background-color: var(--ql-danger) !important;
+  border-color: var(--ql-danger) !important;
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+
+a {
+  color: var(--ql-primary) !important;
+  transition: var(--ql-transition) !important;
+}
+
+a:hover {
+  color: var(--ql-primary-dark) !important;
+  text-decoration: none !important;
+}
+
+/* ============================================
+   FORMS & INPUTS
+   ============================================ */
+
+input,
+textarea,
+select,
+.form-control,
+.hl_form-control,
+.input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"] {
+  background-color: var(--ql-background) !important;
+  border: 1px solid var(--ql-border) !important;
+  color: var(--ql-text-primary) !important;
+  border-radius: var(--ql-radius-sm) !important;
+  transition: var(--ql-transition) !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+.form-control:focus {
+  border-color: var(--ql-primary) !important;
+  box-shadow: 0 0 0 3px rgba(26, 35, 50, 0.1) !important;
+  outline: none !important;
+}
+
+/* Placeholder text */
+::placeholder {
+  color: var(--ql-text-tertiary) !important;
+  opacity: 1 !important;
+}
+
+/* Labels */
+label,
+.form-label,
+.hl_label {
+  color: var(--ql-text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+.table,
+.hl_table,
+table {
+  background-color: var(--ql-surface-elevated) !important;
+  color: var(--ql-text-primary) !important;
+  border-radius: var(--ql-radius) !important;
+}
+
+.table thead th,
+.hl_table thead th,
+table thead th {
+  background-color: var(--ql-surface) !important;
+  border-bottom: 2px solid var(--ql-border) !important;
+  color: var(--ql-text-secondary) !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.5px !important;
+}
+
+.table tbody tr:hover,
+table tbody tr:hover {
+  background-color: var(--ql-surface) !important;
+}
+
+.table td,
+.table th,
+table td,
+table th {
+  border-color: var(--ql-border-light) !important;
+}
+
+/* ============================================
+   BADGES & LABELS
+   ============================================ */
+
+.badge-success,
+.label-success {
+  background-color: var(--ql-success) !important;
+  color: white !important;
+}
+
+.badge-warning,
+.label-warning {
+  background-color: var(--ql-warning) !important;
+  color: var(--ql-text-primary) !important;
+}
+
+.badge-danger,
+.label-danger {
+  background-color: var(--ql-danger) !important;
+  color: white !important;
+}
+
+.badge-info,
+.label-info {
+  background-color: var(--ql-info) !important;
+  color: white !important;
+}
+
+.badge,
+.label {
+  border-radius: var(--ql-radius-sm) !important;
+  padding: 4px 8px !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================
+   PIPELINE / KANBAN
+   ============================================ */
+
+.hl_pipeline-stage,
+.kanban-column,
+.pipeline-stage {
+  background-color: var(--ql-surface) !important;
+  border: 1px solid var(--ql-border) !important;
+  border-radius: var(--ql-radius) !important;
+}
+
+.hl_opportunity-card,
+.opportunity-card,
+.kanban-card {
+  background-color: var(--ql-surface-elevated) !important;
+  border: 1px solid var(--ql-border) !important;
+  border-radius: var(--ql-radius) !important;
+  box-shadow: var(--ql-shadow-sm) !important;
+  transition: var(--ql-transition) !important;
+}
+
+.hl_opportunity-card:hover,
+.opportunity-card:hover,
+.kanban-card:hover {
+  box-shadow: var(--ql-shadow-md) !important;
+  transform: translateY(-2px) !important;
+  border-color: var(--ql-primary) !important;
+}
+
+/* ============================================
+   CONTACT CARDS
+   ============================================ */
+
+.hl_contact-card,
+.contact-card {
+  background-color: var(--ql-surface-elevated) !important;
+  border: 1px solid var(--ql-border) !important;
+  border-radius: var(--ql-radius) !important;
+  box-shadow: var(--ql-shadow-sm) !important;
+  transition: var(--ql-transition) !important;
+}
+
+.hl_contact-card:hover,
+.contact-card:hover {
+  box-shadow: var(--ql-shadow-md) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ============================================
+   MODALS
+   ============================================ */
+
+.modal-content {
+  background-color: var(--ql-surface-elevated) !important;
+  border: 1px solid var(--ql-border) !important;
+  border-radius: var(--ql-radius-lg) !important;
+  box-shadow: var(--ql-shadow-lg) !important;
+}
+
+.modal-header {
+  background-color: var(--ql-surface) !important;
+  border-bottom: 1px solid var(--ql-border) !important;
+  border-radius: var(--ql-radius-lg) var(--ql-radius-lg) 0 0 !important;
+}
+
+.modal-footer {
+  background-color: var(--ql-surface) !important;
+  border-top: 1px solid var(--ql-border) !important;
+  border-radius: 0 0 var(--ql-radius-lg) var(--ql-radius-lg) !important;
+}
+
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ============================================
+   DROPDOWNS
+   ============================================ */
+
+.dropdown-menu {
+  background-color: var(--ql-surface-elevated) !important;
+  border: 1px solid var(--ql-border) !important;
+  border-radius: var(--ql-radius) !important;
+  box-shadow: var(--ql-shadow-md) !important;
+}
+
+.dropdown-item {
+  color: var(--ql-text-primary) !important;
+  transition: var(--ql-transition) !important;
+}
+
+.dropdown-item:hover {
+  background-color: var(--ql-surface) !important;
+  color: var(--ql-primary) !important;
+}
+
+/* ============================================
+   TOOLTIPS
+   ============================================ */
+
+.tooltip-inner {
+  background-color: var(--ql-primary) !important;
+  color: white !important;
+  border-radius: var(--ql-radius-sm) !important;
+}
+
+.tooltip.bs-tooltip-top .arrow::before {
+  border-top-color: var(--ql-primary) !important;
+}
+
+.tooltip.bs-tooltip-bottom .arrow::before {
+  border-bottom-color: var(--ql-primary) !important;
+}
+
+/* ============================================
+   ALERTS
+   ============================================ */
+
+.alert {
+  border-radius: var(--ql-radius) !important;
+  border: 1px solid !important;
+}
+
+.alert-success {
+  background-color: rgba(40, 167, 69, 0.1) !important;
+  border-color: var(--ql-success) !important;
+  color: var(--ql-success) !important;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+  border-color: var(--ql-warning) !important;
+  color: #856404 !important;
+}
+
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.1) !important;
+  border-color: var(--ql-danger) !important;
+  color: var(--ql-danger) !important;
+}
+
+.alert-info {
+  background-color: rgba(23, 162, 184, 0.1) !important;
+  border-color: var(--ql-info) !important;
+  color: var(--ql-info) !important;
+}
+
+/* ============================================
+   SCROLLBARS (Webkit browsers)
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ql-surface);
+  border-radius: var(--ql-radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ql-border);
+  border-radius: var(--ql-radius-sm);
+  transition: var(--ql-transition);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ql-text-tertiary);
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+
+.nav-tabs {
+  border-bottom: 2px solid var(--ql-border) !important;
+}
+
+.nav-tabs .nav-link {
+  color: var(--ql-text-secondary) !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  transition: var(--ql-transition) !important;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--ql-primary) !important;
+  border-bottom-color: var(--ql-primary-light) !important;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--ql-primary) !important;
+  border-bottom-color: var(--ql-primary) !important;
+  background-color: transparent !important;
+}
+
+/* ============================================
+   LOADING INDICATORS
+   ============================================ */
+
+.spinner,
+.loader,
+.loading {
+  border-color: var(--ql-border) !important;
+  border-top-color: var(--ql-primary) !important;
+}
+
+/* ============================================
+   PROGRESS BARS
+   ============================================ */
+
+.progress {
+  background-color: var(--ql-surface) !important;
+  border-radius: var(--ql-radius-sm) !important;
+}
+
+.progress-bar {
+  background-color: var(--ql-primary) !important;
+}
+
+/* ============================================
+   LIST GROUPS
+   ============================================ */
+
+.list-group-item {
+  background-color: var(--ql-surface-elevated) !important;
+  border-color: var(--ql-border) !important;
+  color: var(--ql-text-primary) !important;
+}
+
+.list-group-item:hover {
+  background-color: var(--ql-surface) !important;
+}
+
+.list-group-item.active {
+  background-color: var(--ql-primary) !important;
+  border-color: var(--ql-primary) !important;
+  color: white !important;
+}
+
+/* ============================================
+   CUSTOM ANIMATIONS
+   ============================================ */
+
+@keyframes ql-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ql-fade-in {
+  animation: ql-fade-in 0.3s ease;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.ql-text-primary { color: var(--ql-text-primary) !important; }
+.ql-text-secondary { color: var(--ql-text-secondary) !important; }
+.ql-text-tertiary { color: var(--ql-text-tertiary) !important; }
+
+.ql-bg-primary { background-color: var(--ql-primary) !important; }
+.ql-bg-accent { background-color: var(--ql-accent) !important; }
+.ql-bg-surface { background-color: var(--ql-surface) !important; }
+
+.ql-border { border: 1px solid var(--ql-border) !important; }
+.ql-border-top { border-top: 1px solid var(--ql-border) !important; }
+.ql-border-bottom { border-bottom: 1px solid var(--ql-border) !important; }
+
+.ql-shadow-sm { box-shadow: var(--ql-shadow-sm) !important; }
+.ql-shadow-md { box-shadow: var(--ql-shadow-md) !important; }
+.ql-shadow-lg { box-shadow: var(--ql-shadow-lg) !important; }
+
+.ql-rounded { border-radius: var(--ql-radius) !important; }
+.ql-rounded-sm { border-radius: var(--ql-radius-sm) !important; }
+.ql-rounded-lg { border-radius: var(--ql-radius-lg) !important; }
+
+/* ============================================
+   END OF QURIO THEMES
+   ============================================ */
