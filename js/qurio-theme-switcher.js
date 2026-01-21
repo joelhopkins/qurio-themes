@@ -1,47 +1,104 @@
+<script>
 /**
  * QURIO THEME SWITCHER
- * Version: 1.0.0
- * 
+ * Version: 2.0.0
+ *
  * Dynamic theme system for Qurio luxury real estate CRM
  * Built on HighLevel white-label platform
+ *
+ * Available Themes:
+ * - light: Luxury Light (Navy & Gold)
+ * - dark: Luxury Dark (Full Dark with Gold)
+ * - minimalist: Modern Minimalist (Charcoal & Copper)
+ * - champagne: Champagne & Noir (Parisian Elegance)
+ * - emerald: Emerald Estate (British Luxury)
+ * - coastal: Coastal Luxury (Hampton/Tiffany)
  */
 
 (function() {
   'use strict';
-  
+
   // ============================================
   // CONFIGURATION
   // ============================================
-  
+
   const CONFIG = {
     themes: {
+      none: {
+        name: 'No Theme',
+        description: 'Default HighLevel appearance',
+        icon: '🚫',
+        colors: {
+          sidebar: '#374151',
+          accent: '#6b7280'
+        }
+      },
       light: {
         name: 'Luxury Light',
         description: 'Classic navy and gold luxury theme',
-        icon: '☀️'
+        icon: '☀️',
+        colors: {
+          sidebar: '#1a2332',
+          accent: '#c9a961'
+        }
       },
       dark: {
         name: 'Luxury Dark',
-        description: 'Sophisticated dark mode with gold accents',
-        icon: '🌙'
+        description: 'Full dark mode with gold accents',
+        icon: '🌙',
+        colors: {
+          sidebar: '#1a2332',
+          accent: '#c9a961'
+        }
       },
       minimalist: {
         name: 'Modern Minimalist',
-        description: 'Clean black and white with red accents',
-        icon: '⚡'
+        description: 'Charcoal and copper refined elegance',
+        icon: '◼️',
+        colors: {
+          sidebar: '#2d2d2d',
+          accent: '#b87333'
+        }
+      },
+      champagne: {
+        name: 'Champagne & Noir',
+        description: 'Parisian elegance with rose gold',
+        icon: '🥂',
+        colors: {
+          sidebar: '#1a1a1a',
+          accent: '#b76e79'
+        }
+      },
+      emerald: {
+        name: 'Emerald Estate',
+        description: 'British luxury with rich gold',
+        icon: '💎',
+        colors: {
+          sidebar: '#1b4332',
+          accent: '#d4af37'
+        }
+      },
+      coastal: {
+        name: 'Coastal Luxury',
+        description: 'Hampton elegance with teal accents',
+        icon: '🌊',
+        colors: {
+          sidebar: '#0a7b7b',
+          accent: '#ffffff'
+        }
       }
     },
     defaultTheme: 'light',
     storageKey: 'qurio-theme-preference',
-    showSwitcher: true, // Set to false to hide the theme switcher UI
+    showSwitcher: true,
     position: 'bottom-right', // Options: 'bottom-right', 'bottom-left', 'top-right', 'top-left'
-    debug: false // Set to true for console logging
+    debug: false
   };
-  
+
   // ============================================
   // UTILITY FUNCTIONS
   // ============================================
-  
+
   /**
    * Log to console if debug mode is enabled
    */
@@ -50,7 +107,7 @@
       console.log('[Qurio Themes]', ...args);
     }
   }
-  
+
   /**
    * Get current theme from localStorage
    */
@@ -67,7 +124,7 @@
     log('Using default theme:', CONFIG.defaultTheme);
     return CONFIG.defaultTheme;
   }
-  
+
   /**
    * Save theme preference to localStorage
    */
@@ -81,11 +138,11 @@
       return false;
     }
   }
-  
+
   // ============================================
   // THEME APPLICATION
   // ============================================
-  
+
   /**
    * Apply theme to the document
    */
@@ -95,43 +152,38 @@
       log('Invalid theme name:', themeName);
       return false;
     }
-    
+
     const html = document.documentElement;
-    
-    // Remove all theme attributes
-    Object.keys(CONFIG.themes).forEach(theme => {
-      html.removeAttribute(`data-ql-theme-${theme}`);
-    });
-    
+
     // Apply new theme (light is default, so no attribute needed)
     if (themeName !== 'light') {
       html.setAttribute('data-ql-theme', themeName);
     } else {
       html.removeAttribute('data-ql-theme');
     }
-    
+
     // Save preference if requested
     if (savePreference) {
       saveTheme(themeName);
     }
-    
+
     // Dispatch custom event for any listeners
     const event = new CustomEvent('ql-theme-changed', {
-      detail: { 
+      detail: {
         theme: themeName,
         themeData: CONFIG.themes[themeName]
       }
     });
     window.dispatchEvent(event);
-    
+
     log('Applied theme:', themeName);
     return true;
   }
-  
+
   // ============================================
   // THEME SWITCHER UI
   // ============================================
-  
+
   /**
    * Get position styles based on configuration
    */
@@ -144,7 +196,7 @@
     };
     return positions[CONFIG.position] || positions['bottom-right'];
   }
-  
+
   /**
    * Create theme switcher UI element
    */
@@ -154,32 +206,33 @@
       log('Theme switcher already exists');
       return;
     }
-    
+
     // Don't create if disabled in config
     if (!CONFIG.showSwitcher) {
       log('Theme switcher disabled in config');
       return;
     }
-    
+
     const container = document.createElement('div');
     container.id = 'ql-theme-switcher';
-    
+
     // Build HTML for theme buttons
     let buttonsHTML = '';
     Object.keys(CONFIG.themes).forEach(themeKey => {
       const theme = CONFIG.themes[themeKey];
       buttonsHTML += `
-        <button 
-          class="ql-theme-btn" 
+        <button
+          class="ql-theme-btn"
           data-theme="${themeKey}"
-          title="${theme.name}"
+          title="${theme.name}: ${theme.description}"
           aria-label="Switch to ${theme.name}"
+          style="--btn-sidebar-color: ${theme.colors.sidebar}; --btn-accent-color: ${theme.colors.accent};"
         >
           <span class="ql-theme-icon">${theme.icon}</span>
         </button>
       `;
     });
-    
+
     container.innerHTML = `
       <style>
         #ql-theme-switcher {
@@ -190,26 +243,28 @@
           border: 1px solid var(--ql-border, #e9ecef);
           border-radius: var(--ql-radius-lg, 12px);
           box-shadow: var(--ql-shadow-lg, 0 10px 15px rgba(0,0,0,0.1));
-          padding: 8px;
+          padding: 10px;
           display: flex;
           flex-direction: row;
+          flex-wrap: wrap;
           gap: 6px;
+          max-width: 180px;
           transition: all 0.3s ease;
           opacity: 0.9;
         }
-        
+
         #ql-theme-switcher:hover {
           opacity: 1;
           transform: translateY(-2px);
           box-shadow: 0 12px 20px rgba(0,0,0,0.15);
         }
-        
+
         .ql-theme-btn {
-          width: 44px;
-          height: 44px;
+          width: 48px;
+          height: 48px;
           border: 2px solid var(--ql-border, #e9ecef);
           border-radius: var(--ql-radius, 8px);
-          background: var(--ql-background, #ffffff);
+          background: linear-gradient(135deg, var(--btn-sidebar-color) 50%, var(--btn-accent-color) 50%);
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -219,33 +274,30 @@
           padding: 0;
           outline: none;
         }
-        
+
         .ql-theme-icon {
-          font-size: 20px;
+          font-size: 18px;
           line-height: 1;
           display: block;
+          filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
         }
-        
+
         .ql-theme-btn:hover {
           border-color: var(--ql-primary, #1a2332);
-          transform: scale(1.05);
-          box-shadow: var(--ql-shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
+          transform: scale(1.08);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        
+
         .ql-theme-btn:active {
           transform: scale(0.95);
         }
-        
+
         .ql-theme-btn.active {
-          background: var(--ql-primary, #1a2332);
           border-color: var(--ql-primary, #1a2332);
-          color: white;
+          border-width: 3px;
+          box-shadow: 0 0 0 2px var(--ql-accent, #c9a961);
         }
-        
-        .ql-theme-btn.active .ql-theme-icon {
-          filter: brightness(0) invert(1);
-        }
-        
+
         /* Tooltip */
         .ql-theme-btn::before {
           content: attr(title);
@@ -255,17 +307,21 @@
           transform: translateX(-50%);
           background: var(--ql-primary, #1a2332);
           color: white;
-          padding: 6px 12px;
+          padding: 8px 12px;
           border-radius: var(--ql-radius-sm, 4px);
-          font-size: 12px;
+          font-size: 11px;
           font-family: var(--ql-font-body, sans-serif);
           white-space: nowrap;
           opacity: 0;
           pointer-events: none;
           transition: opacity 0.2s ease, transform 0.2s ease;
           z-index: 1;
+          max-width: 200px;
+          white-space: normal;
+          text-align: center;
+          line-height: 1.3;
         }
-        
+
         .ql-theme-btn::after {
           content: '';
           position: absolute;
@@ -278,39 +334,40 @@
           pointer-events: none;
           transition: opacity 0.2s ease;
         }
-        
+
         .ql-theme-btn:hover::before,
         .ql-theme-btn:hover::after {
           opacity: 1;
         }
-        
+
         .ql-theme-btn:hover::before {
           transform: translateX(-50%) translateY(-4px);
         }
-        
+
         /* Mobile responsiveness */
         @media (max-width: 768px) {
           #ql-theme-switcher {
-            padding: 6px;
+            padding: 8px;
             gap: 4px;
+            max-width: 150px;
           }
-          
+
           .ql-theme-btn {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
           }
-          
+
           .ql-theme-icon {
-            font-size: 18px;
+            font-size: 16px;
           }
-          
+
           /* Hide tooltips on mobile */
           .ql-theme-btn::before,
           .ql-theme-btn::after {
             display: none;
           }
         }
-        
+
         /* Animation for initial load */
         @keyframes ql-switcher-enter {
           from {
@@ -322,21 +379,61 @@
             transform: translateY(0);
           }
         }
-        
+
         #ql-theme-switcher {
           animation: ql-switcher-enter 0.5s ease;
         }
+
+        /* Collapsed state toggle */
+        #ql-theme-switcher .ql-collapse-toggle {
+          position: absolute;
+          top: -12px;
+          right: -12px;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: var(--ql-primary, #1a2332);
+          color: white;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #ql-theme-switcher .ql-collapse-toggle:hover {
+          transform: scale(1.1);
+        }
+
+        #ql-theme-switcher.collapsed {
+          max-width: 60px;
+          padding: 8px;
+        }
+
+        #ql-theme-switcher.collapsed .ql-theme-btn:not(.active) {
+          display: none;
+        }
+
+        #ql-theme-switcher.collapsed .ql-collapse-toggle {
+          transform: rotate(180deg);
+        }
       </style>
-      
+
+      <button class="ql-collapse-toggle" title="Toggle theme picker" aria-label="Toggle theme picker">
+        ◀
+      </button>
       <div class="ql-theme-buttons">
         ${buttonsHTML}
       </div>
     `;
-    
+
     // Add to page
     document.body.appendChild(container);
-    
-    // Attach event listeners
+
+    // Attach event listeners for theme buttons
     container.querySelectorAll('.ql-theme-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         const theme = this.getAttribute('data-theme');
@@ -344,20 +441,28 @@
         updateSwitcherState(theme);
       });
     });
-    
+
+    // Attach event listener for collapse toggle
+    const collapseToggle = container.querySelector('.ql-collapse-toggle');
+    if (collapseToggle) {
+      collapseToggle.addEventListener('click', function() {
+        container.classList.toggle('collapsed');
+      });
+    }
+
     // Set initial active state
     updateSwitcherState(getCurrentTheme());
-    
+
     log('Theme switcher UI created');
   }
-  
+
   /**
    * Update active state of theme buttons
    */
   function updateSwitcherState(activeTheme) {
     const switcher = document.getElementById('ql-theme-switcher');
     if (!switcher) return;
-    
+
     switcher.querySelectorAll('.ql-theme-btn').forEach(btn => {
       const theme = btn.getAttribute('data-theme');
       if (theme === activeTheme) {
@@ -368,24 +473,24 @@
         btn.setAttribute('aria-pressed', 'false');
       }
     });
-    
+
     log('Updated switcher state:', activeTheme);
   }
-  
+
   // ============================================
   // INITIALIZATION
   // ============================================
-  
+
   /**
    * Initialize the theme system
    */
   function init() {
-    log('Initializing Qurio Theme System...');
-    
+    log('Initializing Qurio Theme System v2.0...');
+
     // Apply saved theme immediately (before DOM loads)
     const currentTheme = getCurrentTheme();
     applyTheme(currentTheme, false);
-    
+
     // Create UI when DOM is ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', createThemeSwitcher);
@@ -393,14 +498,14 @@
       // DOM already loaded
       createThemeSwitcher();
     }
-    
+
     log('Qurio Theme System initialized with theme:', currentTheme);
   }
-  
+
   // ============================================
   // PUBLIC API
   // ============================================
-  
+
   /**
    * Public API exposed on window object
    */
@@ -410,47 +515,83 @@
     get current() {
       return getCurrentTheme();
     },
-    
+
     // Data
     themes: CONFIG.themes,
     config: CONFIG,
-    
+
     // Version
-    version: '1.0.0',
-    
+    version: '2.0.0',
+
     // Manual UI creation (if auto-creation is disabled)
     createSwitcher: createThemeSwitcher,
-    
+
     // Event listener helper
     onChange: function(callback) {
       window.addEventListener('ql-theme-changed', function(e) {
         callback(e.detail.theme, e.detail.themeData);
       });
+    },
+
+    // Get list of available theme names
+    list: function() {
+      return Object.keys(CONFIG.themes);
+    },
+
+    // Cycle to next theme
+    next: function() {
+      const themes = Object.keys(CONFIG.themes);
+      const currentIndex = themes.indexOf(getCurrentTheme());
+      const nextIndex = (currentIndex + 1) % themes.length;
+      applyTheme(themes[nextIndex]);
+      updateSwitcherState(themes[nextIndex]);
+      return themes[nextIndex];
+    },
+
+    // Cycle to previous theme
+    prev: function() {
+      const themes = Object.keys(CONFIG.themes);
+      const currentIndex = themes.indexOf(getCurrentTheme());
+      const prevIndex = (currentIndex - 1 + themes.length) % themes.length;
+      applyTheme(themes[prevIndex]);
+      updateSwitcherState(themes[prevIndex]);
+      return themes[prevIndex];
     }
   };
-  
+
   // ============================================
   // AUTO-INITIALIZE
   // ============================================
-  
+
   init();
-  
+
 })();
 
 /**
  * Usage Examples:
- * 
+ *
  * // Apply a theme programmatically
- * QurioThemes.apply('dark');
- * 
+ * QurioThemes.apply('emerald');
+ * QurioThemes.apply('champagne');
+ * QurioThemes.apply('coastal');
+ *
  * // Get current theme
  * console.log(QurioThemes.current);
- * 
+ *
  * // Listen for theme changes
  * QurioThemes.onChange((theme, data) => {
  *   console.log('Theme changed to:', theme, data);
  * });
- * 
+ *
  * // Get available themes
+ * console.log(QurioThemes.list());
+ * // Output: ['light', 'dark', 'minimalist', 'champagne', 'emerald', 'coastal']
+ *
+ * // Cycle through themes
+ * QurioThemes.next(); // Go to next theme
+ * QurioThemes.prev(); // Go to previous theme
+ *
+ * // Get all theme data
  * console.log(QurioThemes.themes);
  */
+</script>
