@@ -443,6 +443,13 @@ html:not([data-ql-theme="none"]) nav.sidebar {
   min-width: 264px !important;
 }
 
+/* Inner sidebar container - override Tailwind w-56 */
+html:not([data-ql-theme="none"]) #sidebar-v2 > div.w-56,
+html:not([data-ql-theme="none"]) #sidebar-v2 > div[class*="w-56"] {
+  width: 264px !important;
+  min-width: 264px !important;
+}
+
 /* Agency Logo Container */
 html:not([data-ql-theme="none"]) .agency-logo-container {
   background-color: rgba(255, 255, 255, 0.03) !important;
