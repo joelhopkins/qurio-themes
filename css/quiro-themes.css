@@ -1321,6 +1321,119 @@ html:not([data-ql-theme="none"]) .ql-rounded-lg { border-radius: var(--ql-radius
 }
 
 /* ============================================
+   COLLAPSED SIDEBAR STYLES
+   When sidebar has w-14 class (56px width)
+   ============================================ */
+
+/* Collapsed sidebar container */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14,
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14.default-bg-color {
+  width: 56px !important;
+  min-width: 56px !important;
+}
+
+/* Inner container when collapsed */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 > div.w-14,
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 > div[class*="w-14"] {
+  width: 56px !important;
+  min-width: 56px !important;
+}
+
+/* Navigation links - collapsed state */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 nav a,
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 .group {
+  justify-content: center !important;
+  padding: var(--ql-space-2) !important;
+  margin: 1px 4px !important;
+  min-height: 40px !important;
+  border-radius: var(--ql-radius) !important;
+}
+
+/* Hide text labels when collapsed */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 nav a .nav-title,
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 nav a span.hl_text-overflow {
+  display: none !important;
+}
+
+/* Center icons when collapsed */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 nav a img,
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 nav a svg,
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 nav a .nav-fa-icon,
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 nav a i {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Hover state for collapsed items */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 nav a:hover {
+  background-color: var(--ql-sidebar-hover-bg) !important;
+  transform: scale(1.05) !important;
+}
+
+/* Active state for collapsed items */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 nav a.active,
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 nav a.exact-active,
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 nav a.router-link-active {
+  background-color: var(--ql-sidebar-active-bg) !important;
+}
+
+/* Location switcher - collapsed */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 #location-switcher-sidbar-v2 {
+  padding: 4px !important;
+  margin: 0 4px var(--ql-space-3) 4px !important;
+  justify-content: center !important;
+}
+
+/* Hide location text when collapsed */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 #location-switcher-sidbar-v2 .hl_location-text,
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 #location-switcher-sidbar-v2 .switcher-caret-holder {
+  display: none !important;
+}
+
+/* Search - collapsed */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 #globalSearchOpener {
+  justify-content: center !important;
+  padding: 4px !important;
+}
+
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 #globalSearchOpener .search-placeholder,
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 #globalSearchOpener .search-shortcut {
+  display: none !important;
+}
+
+/* Quick actions - collapsed */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 #quickActions {
+  justify-content: center !important;
+}
+
+/* Agency logo - collapsed */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 .agency-logo-container {
+  padding: 4px !important;
+}
+
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 .agency-logo {
+  max-width: 100% !important;
+  height: 32px !important;
+}
+
+/* Divider - collapsed */
+html:not([data-ql-theme="none"]) #sidebar-v2.w-14 .divider {
+  padding: 0 8px !important;
+}
+
+/* Collapse button styling */
+html:not([data-ql-theme="none"]) #sidebar-v2 .hl_collapse-button {
+  color: var(--ql-sidebar-text) !important;
+  background-color: var(--ql-sidebar-bg) !important;
+  transition: all var(--ql-duration-fast) var(--ql-ease-out) !important;
+}
+
+html:not([data-ql-theme="none"]) #sidebar-v2 .hl_collapse-button:hover {
+  color: var(--ql-sidebar-accent) !important;
+  transform: scale(1.1) !important;
+}
+
+/* ============================================
    MODERN TECH THEME - Light Sidebar Overrides
    ============================================ */
 
@@ -1516,6 +1629,25 @@ html[data-ql-theme="modern-tech"] .kanban-card:hover {
 /* Tooltip - dark navy */
 html[data-ql-theme="modern-tech"] .tooltip-inner {
   background-color: #1a1f36 !important;
+}
+
+/* Modern Tech - Collapsed sidebar overrides */
+html[data-ql-theme="modern-tech"] #sidebar-v2.w-14 nav a:hover {
+  background-color: rgba(20, 184, 166, 0.1) !important;
+}
+
+html[data-ql-theme="modern-tech"] #sidebar-v2.w-14 nav a.active,
+html[data-ql-theme="modern-tech"] #sidebar-v2.w-14 nav a.exact-active {
+  background-color: #14b8a6 !important;
+}
+
+html[data-ql-theme="modern-tech"] #sidebar-v2 .hl_collapse-button {
+  color: #64748b !important;
+  background-color: #f8fafc !important;
+}
+
+html[data-ql-theme="modern-tech"] #sidebar-v2 .hl_collapse-button:hover {
+  color: #14b8a6 !important;
 }
 
 /* ============================================
