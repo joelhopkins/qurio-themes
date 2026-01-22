@@ -1,10 +1,12 @@
 <script>
 /**
  * QURIO THEME SWITCHER
- * Version: 2.0.0
+ * Version: 2.1.0
  *
  * Dynamic theme system for Qurio luxury real estate CRM
  * Built on HighLevel white-label platform
+ *
+ * Includes Usertour.js integration for product tours
  *
  * Available Themes:
  * - light: Luxury Light (Navy & Gold)
@@ -24,6 +26,11 @@
   // ============================================
 
   const CONFIG = {
+    // Usertour.js Configuration
+    usertour: {
+      enabled: true,
+      token: 'cmkp6w8g20atlxqpezuef2btb'
+    },
     themes: {
       none: {
         name: 'No Theme',
@@ -150,6 +157,91 @@
   }
 
   // ============================================
+  // USERTOUR.JS INTEGRATION
+  // ============================================
+
+  /**
+   * Extract LocationID from the current URL
+   * HighLevel URLs typically follow: /location/{locationId}/...
+   */
+  function getLocationId() {
+    const match = window.location.pathname.match(/location\/([^\/]+)/);
+    return match ? match[1] : null;
+  }
+
+  /**
+   * Load Usertour.js script from CDN
+   */
+  function loadUsertourScript() {
+    return new Promise((resolve, reject) => {
+      // Check if already loaded
+      if (window.usertour && typeof window.usertour.init === 'function') {
+        resolve(window.usertour);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = 'https://js.usertour.io/legacy/usertour.iife.js';
+
+      script.onload = () => {
+        log('Usertour.js script loaded');
+        resolve(window.usertour);
+      };
+
+      script.onerror = () => {
+        log('Failed to load Usertour.js script');
+        reject(new Error('Failed to load Usertour.js'));
+      };
+
+      document.head.appendChild(script);
+    });
+  }
+
+  /**
+   * Initialize Usertour with user identification
+   */
+  async function initUsertour() {
+    if (!CONFIG.usertour.enabled) {
+      log('Usertour is disabled in config');
+      return;
+    }
+
+    try {
+      // Load the Usertour script
+      await loadUsertourScript();
+
+      // Initialize with environment token
+      window.usertour.init(CONFIG.usertour.token);
+      log('Usertour initialized with token');
+
+      // Get LocationID for user identification
+      const locationId = getLocationId();
+
+      if (locationId) {
+        // Identify by LocationID
+        window.usertour.identify(locationId, {
+          location_id: locationId,
+          theme: getCurrentTheme(),
+          identified_at: new Date().toISOString()
+        });
+        log('Usertour identified user by LocationID:', locationId);
+      } else {
+        // Anonymous identification fallback
+        window.usertour.identifyAnonymous({
+          theme: getCurrentTheme(),
+          identified_at: new Date().toISOString()
+        });
+        log('Usertour using anonymous identification');
+      }
+
+    } catch (error) {
+      log('Usertour initialization error:', error);
+    }
+  }
+
+  // ============================================
   // THEME APPLICATION
   // ============================================
 
@@ -185,6 +277,19 @@
       }
     });
     window.dispatchEvent(event);
+
+    // Update Usertour with theme change (if available)
+    if (window.usertour && savePreference) {
+      try {
+        window.usertour.identify(null, {
+          theme: themeName,
+          theme_changed_at: new Date().toISOString()
+        });
+        log('Usertour updated with theme:', themeName);
+      } catch (e) {
+        log('Could not update Usertour:', e);
+      }
+    }
 
     log('Applied theme:', themeName);
     return true;
@@ -501,12 +606,16 @@
     const currentTheme = getCurrentTheme();
     applyTheme(currentTheme, false);
 
-    // Create UI when DOM is ready
+    // Create UI and initialize Usertour when DOM is ready
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', createThemeSwitcher);
+      document.addEventListener('DOMContentLoaded', () => {
+        createThemeSwitcher();
+        initUsertour();
+      });
     } else {
       // DOM already loaded
       createThemeSwitcher();
+      initUsertour();
     }
 
     log('Qurio Theme System initialized with theme:', currentTheme);
@@ -531,7 +640,7 @@
     config: CONFIG,
 
     // Version
-    version: '2.0.0',
+    version: '2.1.0',
 
     // Manual UI creation (if auto-creation is disabled)
     createSwitcher: createThemeSwitcher,
@@ -604,5 +713,22 @@
  *
  * // Get all theme data
  * console.log(QurioThemes.themes);
+ *
+ * // ============================================
+ * // USERTOUR.JS INTEGRATION
+ * // ============================================
+ *
+ * // Usertour is automatically initialized after themes load.
+ * // Users are identified by LocationID (extracted from URL).
+ * // If no LocationID is found, anonymous identification is used.
+ *
+ * // Access Usertour directly (after initialization):
+ * window.usertour.track('event_name');
+ * window.usertour.identify('user_id', { custom_attribute: 'value' });
+ *
+ * // Usertour automatically tracks:
+ * // - location_id: The HighLevel location ID
+ * // - theme: The currently selected theme
+ * // - theme_changed_at: Timestamp when theme was last changed
  */
 </script>

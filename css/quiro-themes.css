@@ -439,6 +439,8 @@ html:not([data-ql-theme="none"]) .main-sidebar,
 html:not([data-ql-theme="none"]) nav.sidebar {
   background-color: var(--ql-sidebar-bg) !important;
   border-right: 2px solid var(--ql-sidebar-accent) !important;
+  width: 264px !important;
+  min-width: 264px !important;
 }
 
 /* Agency Logo Container */
@@ -461,7 +463,6 @@ html:not([data-ql-theme="none"]) #location-switcher-sidbar-v2 {
 html:not([data-ql-theme="none"]) #location-switcher-sidbar-v2:hover {
   background-color: rgba(255, 255, 255, 0.12) !important;
   border-color: var(--ql-sidebar-accent) !important;
-  transform: translateY(-1px) !important;
 }
 
 html:not([data-ql-theme="none"]) #location-switcher-sidbar-v2:focus-visible {
@@ -1303,6 +1304,7 @@ html:not([data-ql-theme="none"]) .ql-rounded-lg { border-radius: var(--ql-radius
 @media (max-width: 768px) {
   html:not([data-ql-theme="none"]) #sidebar-v2 {
     width: auto !important;
+    min-width: auto !important;
   }
 
   html:not([data-ql-theme="none"]) #sidebar-v2.collapsed nav a {
