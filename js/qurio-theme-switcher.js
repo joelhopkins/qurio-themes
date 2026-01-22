@@ -13,6 +13,7 @@
  * - champagne: Champagne & Noir (Parisian Elegance)
  * - emerald: Emerald Estate (British Luxury)
  * - coastal: Coastal Luxury (Hampton/Tiffany)
+ * - modern-tech: Modern Tech (Clean SaaS with Teal)
  */
 
 (function() {
@@ -85,6 +86,15 @@
         colors: {
           sidebar: '#0a7b7b',
           accent: '#ffffff'
+        }
+      },
+      'modern-tech': {
+        name: 'Modern Tech',
+        description: 'Clean SaaS style with light sidebar',
+        icon: '💻',
+        colors: {
+          sidebar: '#1a1f36',
+          accent: '#14b8a6'
         }
       }
     },
@@ -574,6 +584,7 @@
  * QurioThemes.apply('emerald');
  * QurioThemes.apply('champagne');
  * QurioThemes.apply('coastal');
+ * QurioThemes.apply('modern-tech');
  *
  * // Get current theme
  * console.log(QurioThemes.current);
@@ -585,7 +596,7 @@
  *
  * // Get available themes
  * console.log(QurioThemes.list());
- * // Output: ['light', 'dark', 'minimalist', 'champagne', 'emerald', 'coastal']
+ * // Output: ['none', 'light', 'dark', 'minimalist', 'champagne', 'emerald', 'coastal', 'modern-tech']
  *
  * // Cycle through themes
  * QurioThemes.next(); // Go to next theme
