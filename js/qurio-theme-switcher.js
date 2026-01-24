@@ -1,7 +1,7 @@
 <script>
 /**
  * QURIO SETTINGS PANEL
- * Version: 3.0.1
+ * Version: 3.7.0
  *
  * Dynamic settings system for Qurio luxury real estate CRM
  * Built on HighLevel white-label platform
@@ -113,7 +113,7 @@
       }
     },
 
-    // Menu Items Configuration
+    // Main Menu Items Configuration
     // Selectors based on actual HighLevel sidebar HTML structure
     menuItems: {
       launchpad: { name: 'Launchpad', selector: '#sb_launchpad', default: true },
@@ -135,10 +135,101 @@
       qurioDocs: { name: 'Qurio Docs', selector: 'a.custom-link', default: true }
     },
 
+    // Settings Menu Items Configuration
+    // These appear when user clicks Settings in the main menu
+    settingsMenuItems: {
+      // MY BUSINESS
+      businessProfile: { name: 'Business Profile', selector: '#sb_business_info', default: true, group: 'My Business' },
+      myProfile: { name: 'My Profile', selector: '#sb_profile', default: true, group: 'My Business' },
+      billing: { name: 'Billing', selector: '#sb_saas-billing', default: true, group: 'My Business' },
+      myStaff: { name: 'My Staff', selector: '#sb_my-staff', default: true, group: 'My Business' },
+      opportunitiesPipelines: { name: 'Opportunities & Pipelines', selector: '#sb_Opportunities-Pipelines', default: true, group: 'My Business' },
+      // BUSINESS SERVICES
+      settingsCalendars: { name: 'Calendars', selector: 'a[meta="calendars"][href*="settings"]', default: true, group: 'Business Services' },
+      conversationAI: { name: 'Conversation AI', selector: '#sb_conversation_ai_settings_v2', default: true, group: 'Business Services' },
+      voiceAIAgents: { name: 'Voice AI Agents', selector: '#sb_ai_agent_settings', default: true, group: 'Business Services' },
+      emailServices: { name: 'Email Services', selector: '#sb_location-email-services', default: true, group: 'Business Services' },
+      phoneSystem: { name: 'Phone System', selector: '#sb_phone-system', default: true, group: 'Business Services' },
+      whatsapp: { name: 'WhatsApp', selector: '#sb_whatsapp', default: true, group: 'Business Services' },
+      // OTHER SETTINGS
+      objects: { name: 'Objects', selector: '#sb_objects', default: true, group: 'Other Settings' },
+      customFields: { name: 'Custom Fields', selector: '#sb_custom-fields-settings', default: true, group: 'Other Settings' },
+      customValues: { name: 'Custom Values', selector: '#sb_custom-values', default: true, group: 'Other Settings' },
+      manageScoring: { name: 'Manage Scoring', selector: '#sb_manage-scoring', default: true, group: 'Other Settings' },
+      domainsUrlRedirects: { name: 'Domains & URL Redirects', selector: '#sb_domains-urlRedirects', default: true, group: 'Other Settings' },
+      externalTracking: { name: 'External Tracking', selector: '#sb_external-tracking', default: true, group: 'Other Settings' },
+      integrations: { name: 'Integrations', selector: '#sb_integrations', default: true, group: 'Other Settings' },
+      privateIntegrations: { name: 'Private Integrations', selector: '[id="sb_common.sidebar.privateIntegrations"]', default: true, group: 'Other Settings' },
+      tags: { name: 'Tags', selector: '#sb_tags', default: true, group: 'Other Settings' },
+      labs: { name: 'Labs', selector: '#sb_labs', default: true, group: 'Other Settings' },
+      auditLogs: { name: 'Audit Logs', selector: '#sb_audit-logs-location', default: true, group: 'Other Settings' },
+      brandBoards: { name: 'Brand Boards', selector: '#sb_brand-boards', default: true, group: 'Other Settings' }
+    },
+
+    // UI Elements Configuration
+    // These are elements within pages that can be hidden (tabs, buttons, etc.)
+    // Uses text matching OR direct selector when data attributes are available
+    uiElements: {
+      // Phone System page tabs
+      regulatoryBundles: {
+        name: 'Regulatory Bundles Tab',
+        containerSelector: '.hl_affiliate--nav',
+        matchText: 'Regulatory Bundles',
+        default: true,
+        group: 'Phone System'
+      },
+      // Calendar Settings tabs
+      calendarServiceMenu: {
+        name: 'Service Menu Tab',
+        selector: '[data-name="services"].n-tabs-tab',
+        default: true,
+        group: 'Calendar Settings'
+      },
+      calendarRooms: {
+        name: 'Rooms Tab',
+        selector: '[data-name="rooms"].n-tabs-tab',
+        default: true,
+        group: 'Calendar Settings'
+      },
+      calendarEquipment: {
+        name: 'Equipment Tab',
+        selector: '[data-name="equipments"].n-tabs-tab',
+        default: true,
+        group: 'Calendar Settings'
+      },
+      // Email Services tabs
+      emailSmtpService: {
+        name: 'SMTP Service Tab',
+        selector: '[data-name="smtpServices"].n-tabs-tab',
+        default: true,
+        group: 'Email Services'
+      },
+      emailRiskAssessment: {
+        name: 'Risk Assessment Tab',
+        selector: '[data-name="riskAssessment"].n-tabs-tab',
+        default: true,
+        group: 'Email Services'
+      },
+      emailBounceClassification: {
+        name: 'Bounce Classification Tab',
+        selector: '[data-name="bounceClassification"].n-tabs-tab',
+        default: true,
+        group: 'Email Services'
+      },
+      emailPostmasterTools: {
+        name: 'Postmaster Tools Tab',
+        selector: '[data-name="postmasterTools"].n-tabs-tab',
+        default: true,
+        group: 'Email Services'
+      }
+    },
+
     // Storage Keys
     storageKeys: {
       theme: 'qurio-theme-preference',
-      menuVisibility: 'qurio-menu-visibility'
+      menuVisibility: 'qurio-menu-visibility',
+      settingsMenuVisibility: 'qurio-settings-menu-visibility',
+      uiElementsVisibility: 'qurio-ui-elements-visibility'
     },
 
     // UI Settings
@@ -262,12 +353,16 @@
   }
 
   function applyMenuVisibility(visibility) {
-    // Remove existing style element if present
+    // Get or create style element, ensuring it's attached to the DOM
     let styleEl = document.getElementById('qurio-menu-visibility-styles');
-    if (!styleEl) {
+
+    // Check if element exists AND is attached to the DOM
+    if (!styleEl || !styleEl.parentElement) {
+      if (styleEl) styleEl.remove();
       styleEl = document.createElement('style');
       styleEl.id = 'qurio-menu-visibility-styles';
-      document.head.appendChild(styleEl);
+      const target = document.head || document.documentElement;
+      if (target) target.appendChild(styleEl);
     }
 
     // Build CSS rules for hidden items
@@ -322,6 +417,236 @@
     }
 
     const event = new CustomEvent('ql-menu-visibility-changed', {
+      detail: { item: itemKey, visible: visible, visibility: visibility }
+    });
+    window.dispatchEvent(event);
+  }
+
+  // ============================================
+  // SETTINGS MENU VISIBILITY MANAGEMENT
+  // ============================================
+
+  function getSettingsMenuVisibility() {
+    try {
+      const stored = localStorage.getItem(CONFIG.storageKeys.settingsMenuVisibility);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        log('Retrieved settings menu visibility from storage:', parsed);
+        return parsed;
+      }
+    } catch (e) {
+      log('Could not access settings menu visibility from localStorage:', e);
+    }
+
+    // Return defaults
+    const defaults = {};
+    Object.keys(CONFIG.settingsMenuItems).forEach(key => {
+      defaults[key] = CONFIG.settingsMenuItems[key].default;
+    });
+    log('Using default settings menu visibility');
+    return defaults;
+  }
+
+  function saveSettingsMenuVisibility(visibility) {
+    try {
+      localStorage.setItem(CONFIG.storageKeys.settingsMenuVisibility, JSON.stringify(visibility));
+      log('Saved settings menu visibility to storage:', visibility);
+      return true;
+    } catch (e) {
+      log('Could not save settings menu visibility to localStorage:', e);
+      return false;
+    }
+  }
+
+  function applySettingsMenuVisibility(visibility) {
+    // Get or create style element, ensuring it's attached to the DOM
+    let styleEl = document.getElementById('qurio-settings-menu-visibility-styles');
+
+    // Check if element exists AND is attached to the DOM
+    if (!styleEl || !styleEl.parentElement) {
+      if (styleEl) styleEl.remove();
+      styleEl = document.createElement('style');
+      styleEl.id = 'qurio-settings-menu-visibility-styles';
+      const target = document.head || document.documentElement;
+      if (target) target.appendChild(styleEl);
+    }
+
+    // Build CSS rules for hidden items
+    let css = '';
+    Object.keys(visibility).forEach(key => {
+      if (!visibility[key] && CONFIG.settingsMenuItems[key]) {
+        const item = CONFIG.settingsMenuItems[key];
+        // High specificity selectors to override theme styles
+        css += `html #sidebar-v2 nav ${item.selector} { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; padding: 0 !important; margin: 0 !important; }\n`;
+        css += `html:not([data-ql-theme="none"]) #sidebar-v2 nav ${item.selector} { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; padding: 0 !important; margin: 0 !important; }\n`;
+        css += `html body #sidebar-v2 nav ${item.selector} { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; padding: 0 !important; margin: 0 !important; }\n`;
+      }
+    });
+
+    styleEl.textContent = css;
+    log('Applied settings menu visibility CSS');
+
+    // Also apply via direct DOM manipulation as a fallback
+    Object.keys(visibility).forEach(key => {
+      if (CONFIG.settingsMenuItems[key]) {
+        const item = CONFIG.settingsMenuItems[key];
+        try {
+          const elements = document.querySelectorAll(item.selector);
+          elements.forEach(el => {
+            if (visibility[key]) {
+              el.style.removeProperty('display');
+              el.style.removeProperty('visibility');
+            } else {
+              el.style.setProperty('display', 'none', 'important');
+              el.style.setProperty('visibility', 'hidden', 'important');
+            }
+          });
+        } catch (e) {
+          log('Could not apply settings visibility to', key, e);
+        }
+      }
+    });
+  }
+
+  function setSettingsMenuItemVisibility(itemKey, visible) {
+    const visibility = getSettingsMenuVisibility();
+    visibility[itemKey] = visible;
+    saveSettingsMenuVisibility(visibility);
+    applySettingsMenuVisibility(visibility);
+
+    // Update toggle in UI if exists
+    const toggle = document.querySelector(`#qurio-settings-panel [data-settings-menu-item="${itemKey}"]`);
+    if (toggle) {
+      toggle.checked = visible;
+    }
+
+    const event = new CustomEvent('ql-settings-menu-visibility-changed', {
+      detail: { item: itemKey, visible: visible, visibility: visibility }
+    });
+    window.dispatchEvent(event);
+  }
+
+  // ============================================
+  // UI ELEMENTS VISIBILITY MANAGEMENT
+  // For page elements like tabs, buttons that need text matching
+  // ============================================
+
+  function getUIElementsVisibility() {
+    try {
+      const stored = localStorage.getItem(CONFIG.storageKeys.uiElementsVisibility);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        log('Retrieved UI elements visibility from storage:', parsed);
+        return parsed;
+      }
+    } catch (e) {
+      log('Could not access UI elements visibility from localStorage:', e);
+    }
+
+    // Return defaults
+    const defaults = {};
+    Object.keys(CONFIG.uiElements).forEach(key => {
+      defaults[key] = CONFIG.uiElements[key].default;
+    });
+    log('Using default UI elements visibility');
+    return defaults;
+  }
+
+  function saveUIElementsVisibility(visibility) {
+    try {
+      localStorage.setItem(CONFIG.storageKeys.uiElementsVisibility, JSON.stringify(visibility));
+      log('Saved UI elements visibility to storage:', visibility);
+      return true;
+    } catch (e) {
+      log('Could not save UI elements visibility to localStorage:', e);
+      return false;
+    }
+  }
+
+  function applyUIElementsVisibility(visibility) {
+    // Get or create style element, ensuring it's attached to the DOM
+    let styleEl = document.getElementById('qurio-ui-elements-visibility-styles');
+
+    // Check if element exists AND is attached to the DOM
+    if (!styleEl || !styleEl.parentElement) {
+      // Remove detached element if it exists
+      if (styleEl) {
+        styleEl.remove();
+      }
+      // Create new element
+      styleEl = document.createElement('style');
+      styleEl.id = 'qurio-ui-elements-visibility-styles';
+
+      // Append to head, with fallback to documentElement
+      const target = document.head || document.documentElement;
+      if (target) {
+        target.appendChild(styleEl);
+        log('Created and attached UI elements style element to', target.tagName);
+      } else {
+        log('ERROR: Could not find head or documentElement to attach styles');
+        return;
+      }
+    }
+
+    // Build CSS rules for selector-based items
+    let css = '';
+
+    Object.keys(CONFIG.uiElements).forEach(key => {
+      const item = CONFIG.uiElements[key];
+      const shouldShow = visibility[key] !== false;
+
+      try {
+        // Approach 1: CSS-based hiding for items with selector (preferred)
+        if (item.selector && !shouldShow) {
+          // Hide both the element and its wrapper
+          css += `${item.selector} { display: none !important; visibility: hidden !important; }\n`;
+          css += `.n-tabs-tab-wrapper:has(${item.selector}) { display: none !important; visibility: hidden !important; }\n`;
+        }
+        // Approach 2: JavaScript DOM manipulation for text-matching items
+        else if (item.containerSelector && item.matchText) {
+          const containers = document.querySelectorAll(item.containerSelector);
+          containers.forEach(container => {
+            // Find all links/items within the container
+            const items = container.querySelectorAll('li, a, button, [role="tab"]');
+            items.forEach(el => {
+              // Check if text content matches
+              const text = el.textContent.trim();
+              if (text === item.matchText) {
+                // Found the element - get the parent li if this is an anchor
+                const targetEl = el.tagName === 'A' ? el.closest('li') || el : el;
+                if (shouldShow) {
+                  targetEl.style.removeProperty('display');
+                  targetEl.style.removeProperty('visibility');
+                } else {
+                  targetEl.style.setProperty('display', 'none', 'important');
+                  targetEl.style.setProperty('visibility', 'hidden', 'important');
+                }
+              }
+            });
+          });
+        }
+      } catch (e) {
+        log('Could not apply UI element visibility to', key, e);
+      }
+    });
+
+    styleEl.textContent = css;
+    log('Applied UI elements visibility CSS:', css);
+  }
+
+  function setUIElementVisibility(itemKey, visible) {
+    const visibility = getUIElementsVisibility();
+    visibility[itemKey] = visible;
+    saveUIElementsVisibility(visibility);
+    applyUIElementsVisibility(visibility);
+
+    // Update toggle in UI if exists
+    const toggle = document.querySelector(`#qurio-settings-panel [data-ui-element="${itemKey}"]`);
+    if (toggle) {
+      toggle.checked = visible;
+    }
+
+    const event = new CustomEvent('ql-ui-element-visibility-changed', {
       detail: { item: itemKey, visible: visible, visibility: visibility }
     });
     window.dispatchEvent(event);
@@ -398,16 +723,6 @@
   // SETTINGS PANEL UI
   // ============================================
 
-  function getPositionStyles() {
-    const positions = {
-      'bottom-right': 'bottom: 20px; right: 20px;',
-      'bottom-left': 'bottom: 20px; left: 20px;',
-      'top-right': 'top: 20px; right: 20px;',
-      'top-left': 'top: 20px; left: 20px;'
-    };
-    return positions[CONFIG.position] || positions['bottom-right'];
-  }
-
   function createSettingsPanel() {
     if (document.getElementById('qurio-settings-panel')) {
       log('Settings panel already exists');
@@ -421,6 +736,7 @@
 
     const currentTheme = getCurrentTheme();
     const menuVisibility = getMenuVisibility();
+    const settingsMenuVisibility = getSettingsMenuVisibility();
 
     // Build theme buttons HTML
     let themeButtonsHTML = '';
@@ -456,357 +772,63 @@
       `;
     });
 
+    // Build settings menu toggles HTML (grouped by section)
+    let settingsMenuTogglesHTML = '';
+    let currentGroup = '';
+    Object.keys(CONFIG.settingsMenuItems).forEach(itemKey => {
+      const item = CONFIG.settingsMenuItems[itemKey];
+      const isVisible = settingsMenuVisibility[itemKey] !== false;
+
+      // Add group header if group changed
+      if (item.group !== currentGroup) {
+        currentGroup = item.group;
+        settingsMenuTogglesHTML += `
+          <div class="qs-toggle-group-header">${item.group}</div>
+        `;
+      }
+
+      settingsMenuTogglesHTML += `
+        <label class="qs-toggle-row">
+          <span class="qs-toggle-label">${item.name}</span>
+          <div class="qs-toggle-switch">
+            <input type="checkbox" data-settings-menu-item="${itemKey}" ${isVisible ? 'checked' : ''}>
+            <span class="qs-toggle-slider"></span>
+          </div>
+        </label>
+      `;
+    });
+
+    // Build UI elements toggles HTML (grouped by section)
+    const uiElementsVisibility = getUIElementsVisibility();
+    let uiElementsTogglesHTML = '';
+    let currentUIGroup = '';
+    Object.keys(CONFIG.uiElements).forEach(itemKey => {
+      const item = CONFIG.uiElements[itemKey];
+      const isVisible = uiElementsVisibility[itemKey] !== false;
+
+      // Add group header if group changed
+      if (item.group !== currentUIGroup) {
+        currentUIGroup = item.group;
+        uiElementsTogglesHTML += `
+          <div class="qs-toggle-group-header">${item.group}</div>
+        `;
+      }
+
+      uiElementsTogglesHTML += `
+        <label class="qs-toggle-row">
+          <span class="qs-toggle-label">${item.name}</span>
+          <div class="qs-toggle-switch">
+            <input type="checkbox" data-ui-element="${itemKey}" ${isVisible ? 'checked' : ''}>
+            <span class="qs-toggle-slider"></span>
+          </div>
+        </label>
+      `;
+    });
+
     const container = document.createElement('div');
     container.id = 'qurio-settings-panel';
 
     container.innerHTML = `
-      <style>
-        /* Settings Trigger Button */
-        #qurio-settings-trigger {
-          position: fixed;
-          ${getPositionStyles()}
-          z-index: 99999;
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          background: var(--ql-primary, #1a2332);
-          border: none;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-          transition: all 0.3s ease;
-        }
-
-        #qurio-settings-trigger:hover {
-          transform: scale(1.1);
-          box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-        }
-
-        #qurio-settings-trigger svg {
-          width: 24px;
-          height: 24px;
-          fill: var(--ql-accent, #c9a961);
-          transition: transform 0.5s ease;
-        }
-
-        #qurio-settings-trigger:hover svg {
-          transform: rotate(90deg);
-        }
-
-        #qurio-settings-trigger.active svg {
-          transform: rotate(180deg);
-        }
-
-        /* Settings Panel */
-        #qurio-settings-container {
-          position: fixed;
-          bottom: 80px;
-          right: 20px;
-          z-index: 99998;
-          width: 320px;
-          max-height: calc(100vh - 120px);
-          background: var(--ql-surface-elevated, #ffffff);
-          border: 1px solid var(--ql-border, #e0e0e0);
-          border-radius: 12px;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-          opacity: 0;
-          visibility: hidden;
-          transform: translateY(20px) scale(0.95);
-          transition: all 0.3s ease;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-        }
-
-        #qurio-settings-container.open {
-          opacity: 1;
-          visibility: visible;
-          transform: translateY(0) scale(1);
-        }
-
-        /* Panel Header */
-        .qs-header {
-          padding: 16px 20px;
-          background: var(--ql-primary, #1a2332);
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .qs-header h3 {
-          margin: 0;
-          font-size: 16px;
-          font-weight: 600;
-          font-family: var(--ql-font-body, system-ui, sans-serif);
-        }
-
-        .qs-close-btn {
-          background: none;
-          border: none;
-          color: white;
-          cursor: pointer;
-          padding: 4px;
-          display: flex;
-          opacity: 0.7;
-          transition: opacity 0.2s;
-        }
-
-        .qs-close-btn:hover {
-          opacity: 1;
-        }
-
-        /* Panel Content */
-        .qs-content {
-          flex: 1;
-          overflow-y: auto;
-          padding: 0;
-        }
-
-        /* Section */
-        .qs-section {
-          border-bottom: 1px solid var(--ql-border, #e0e0e0);
-        }
-
-        .qs-section:last-child {
-          border-bottom: none;
-        }
-
-        .qs-section-header {
-          padding: 14px 20px;
-          background: var(--ql-surface, #f8f9fa);
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          transition: background 0.2s;
-          user-select: none;
-        }
-
-        .qs-section-header:hover {
-          background: var(--ql-surface-hover, #f0f1f2);
-        }
-
-        .qs-section-title {
-          font-size: 13px;
-          font-weight: 600;
-          color: var(--ql-text-primary, #1a2332);
-          font-family: var(--ql-font-body, system-ui, sans-serif);
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .qs-section-arrow {
-          transition: transform 0.3s ease;
-          color: var(--ql-text-secondary, #6b7280);
-        }
-
-        .qs-section.expanded .qs-section-arrow {
-          transform: rotate(180deg);
-        }
-
-        .qs-section-content {
-          max-height: 0;
-          overflow: hidden;
-          transition: max-height 0.3s ease;
-        }
-
-        .qs-section.expanded .qs-section-content {
-          max-height: 1000px;
-        }
-
-        .qs-section-inner {
-          padding: 12px 20px 16px;
-        }
-
-        /* Theme Buttons */
-        .qs-themes-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 8px;
-        }
-
-        .qs-theme-btn {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 10px 12px;
-          border: 2px solid var(--ql-border, #e0e0e0);
-          border-radius: 8px;
-          background: linear-gradient(135deg, var(--btn-sidebar) 0%, var(--btn-sidebar) 50%, var(--btn-accent) 50%, var(--btn-accent) 100%);
-          cursor: pointer;
-          transition: all 0.2s ease;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .qs-theme-btn::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: rgba(255,255,255,0.9);
-          z-index: 1;
-        }
-
-        .qs-theme-btn:hover {
-          border-color: var(--ql-primary, #1a2332);
-          transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .qs-theme-btn.active {
-          border-color: var(--ql-accent, #c9a961);
-          border-width: 2px;
-          box-shadow: 0 0 0 2px rgba(201, 169, 97, 0.3);
-        }
-
-        .qs-theme-icon {
-          font-size: 18px;
-          position: relative;
-          z-index: 2;
-        }
-
-        .qs-theme-name {
-          font-size: 11px;
-          font-weight: 500;
-          color: var(--ql-text-primary, #1a2332);
-          position: relative;
-          z-index: 2;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        /* Toggle Switches */
-        .qs-toggles-list {
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-        }
-
-        .qs-toggle-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 8px 0;
-          cursor: pointer;
-          transition: background 0.2s;
-          border-radius: 4px;
-          padding-left: 4px;
-          padding-right: 4px;
-        }
-
-        .qs-toggle-row:hover {
-          background: var(--ql-surface, #f8f9fa);
-        }
-
-        .qs-toggle-label {
-          font-size: 13px;
-          color: var(--ql-text-primary, #1a2332);
-          font-family: var(--ql-font-body, system-ui, sans-serif);
-        }
-
-        .qs-toggle-switch {
-          position: relative;
-          width: 44px;
-          height: 24px;
-          flex-shrink: 0;
-        }
-
-        .qs-toggle-switch input {
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-
-        .qs-toggle-slider {
-          position: absolute;
-          cursor: pointer;
-          inset: 0;
-          background: #ccc;
-          border-radius: 24px;
-          transition: all 0.3s ease;
-        }
-
-        .qs-toggle-slider::before {
-          position: absolute;
-          content: '';
-          height: 18px;
-          width: 18px;
-          left: 3px;
-          bottom: 3px;
-          background: white;
-          border-radius: 50%;
-          transition: all 0.3s ease;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .qs-toggle-switch input:checked + .qs-toggle-slider {
-          background: var(--ql-accent, #c9a961);
-        }
-
-        .qs-toggle-switch input:checked + .qs-toggle-slider::before {
-          transform: translateX(20px);
-        }
-
-        /* Bulk Actions */
-        .qs-bulk-actions {
-          display: flex;
-          gap: 8px;
-          margin-bottom: 12px;
-          padding-bottom: 12px;
-          border-bottom: 1px solid var(--ql-border, #e0e0e0);
-        }
-
-        .qs-bulk-btn {
-          flex: 1;
-          padding: 8px 12px;
-          font-size: 11px;
-          font-weight: 500;
-          border: 1px solid var(--ql-border, #e0e0e0);
-          border-radius: 6px;
-          background: var(--ql-surface, #f8f9fa);
-          color: var(--ql-text-primary, #1a2332);
-          cursor: pointer;
-          transition: all 0.2s ease;
-          font-family: var(--ql-font-body, system-ui, sans-serif);
-        }
-
-        .qs-bulk-btn:hover {
-          background: var(--ql-primary, #1a2332);
-          color: white;
-          border-color: var(--ql-primary, #1a2332);
-        }
-
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-          #qurio-settings-container {
-            width: calc(100vw - 40px);
-            right: 20px;
-            left: 20px;
-            bottom: 80px;
-          }
-        }
-
-        /* Animation */
-        @keyframes qs-fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        #qurio-settings-trigger {
-          animation: qs-fade-in 0.5s ease;
-        }
-      </style>
-
       <!-- Settings Trigger Button -->
       <button id="qurio-settings-trigger" title="Qurio Settings" aria-label="Open Qurio Settings">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -846,7 +868,7 @@
           <!-- Menu Visibility Section -->
           <div class="qs-section expanded" data-section="menu">
             <div class="qs-section-header">
-              <span class="qs-section-title">Menu Items</span>
+              <span class="qs-section-title">Main Menu</span>
               <svg class="qs-section-arrow" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
               </svg>
@@ -859,6 +881,48 @@
                 </div>
                 <div class="qs-toggles-list">
                   ${menuTogglesHTML}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings Menu Visibility Section -->
+          <div class="qs-section" data-section="settings-menu">
+            <div class="qs-section-header">
+              <span class="qs-section-title">Settings Menu</span>
+              <svg class="qs-section-arrow" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+              </svg>
+            </div>
+            <div class="qs-section-content">
+              <div class="qs-section-inner">
+                <div class="qs-bulk-actions">
+                  <button class="qs-bulk-btn" data-action="show-all-settings">Show All</button>
+                  <button class="qs-bulk-btn" data-action="hide-all-settings">Hide All</button>
+                </div>
+                <div class="qs-toggles-list">
+                  ${settingsMenuTogglesHTML}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- UI Elements Visibility Section -->
+          <div class="qs-section" data-section="ui-elements">
+            <div class="qs-section-header">
+              <span class="qs-section-title">Interface Elements</span>
+              <svg class="qs-section-arrow" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+              </svg>
+            </div>
+            <div class="qs-section-content">
+              <div class="qs-section-inner">
+                <div class="qs-bulk-actions">
+                  <button class="qs-bulk-btn" data-action="show-all-ui">Show All</button>
+                  <button class="qs-bulk-btn" data-action="hide-all-ui">Hide All</button>
+                </div>
+                <div class="qs-toggles-list">
+                  ${uiElementsTogglesHTML}
                 </div>
               </div>
             </div>
@@ -913,15 +977,23 @@
       });
     });
 
-    // Menu toggles
-    container.querySelectorAll('.qs-toggle-switch input').forEach(toggle => {
+    // Main menu toggles
+    container.querySelectorAll('.qs-toggle-switch input[data-menu-item]').forEach(toggle => {
       toggle.addEventListener('change', () => {
         const itemKey = toggle.getAttribute('data-menu-item');
         setMenuItemVisibility(itemKey, toggle.checked);
       });
     });
 
-    // Bulk actions
+    // Settings menu toggles
+    container.querySelectorAll('.qs-toggle-switch input[data-settings-menu-item]').forEach(toggle => {
+      toggle.addEventListener('change', () => {
+        const itemKey = toggle.getAttribute('data-settings-menu-item');
+        setSettingsMenuItemVisibility(itemKey, toggle.checked);
+      });
+    });
+
+    // Main menu bulk actions
     container.querySelector('[data-action="show-all"]').addEventListener('click', () => {
       const visibility = {};
       Object.keys(CONFIG.menuItems).forEach(key => {
@@ -930,8 +1002,8 @@
       saveMenuVisibility(visibility);
       applyMenuVisibility(visibility);
 
-      // Update all toggles
-      container.querySelectorAll('.qs-toggle-switch input').forEach(toggle => {
+      // Update main menu toggles only
+      container.querySelectorAll('.qs-toggle-switch input[data-menu-item]').forEach(toggle => {
         toggle.checked = true;
       });
     });
@@ -944,8 +1016,74 @@
       saveMenuVisibility(visibility);
       applyMenuVisibility(visibility);
 
-      // Update all toggles
-      container.querySelectorAll('.qs-toggle-switch input').forEach(toggle => {
+      // Update main menu toggles only
+      container.querySelectorAll('.qs-toggle-switch input[data-menu-item]').forEach(toggle => {
+        toggle.checked = false;
+      });
+    });
+
+    // Settings menu bulk actions
+    container.querySelector('[data-action="show-all-settings"]').addEventListener('click', () => {
+      const visibility = {};
+      Object.keys(CONFIG.settingsMenuItems).forEach(key => {
+        visibility[key] = true;
+      });
+      saveSettingsMenuVisibility(visibility);
+      applySettingsMenuVisibility(visibility);
+
+      // Update settings menu toggles only
+      container.querySelectorAll('.qs-toggle-switch input[data-settings-menu-item]').forEach(toggle => {
+        toggle.checked = true;
+      });
+    });
+
+    container.querySelector('[data-action="hide-all-settings"]').addEventListener('click', () => {
+      const visibility = {};
+      Object.keys(CONFIG.settingsMenuItems).forEach(key => {
+        visibility[key] = false;
+      });
+      saveSettingsMenuVisibility(visibility);
+      applySettingsMenuVisibility(visibility);
+
+      // Update settings menu toggles only
+      container.querySelectorAll('.qs-toggle-switch input[data-settings-menu-item]').forEach(toggle => {
+        toggle.checked = false;
+      });
+    });
+
+    // UI elements toggles
+    container.querySelectorAll('.qs-toggle-switch input[data-ui-element]').forEach(toggle => {
+      toggle.addEventListener('change', () => {
+        const itemKey = toggle.getAttribute('data-ui-element');
+        setUIElementVisibility(itemKey, toggle.checked);
+      });
+    });
+
+    // UI elements bulk actions
+    container.querySelector('[data-action="show-all-ui"]').addEventListener('click', () => {
+      const visibility = {};
+      Object.keys(CONFIG.uiElements).forEach(key => {
+        visibility[key] = true;
+      });
+      saveUIElementsVisibility(visibility);
+      applyUIElementsVisibility(visibility);
+
+      // Update UI element toggles only
+      container.querySelectorAll('.qs-toggle-switch input[data-ui-element]').forEach(toggle => {
+        toggle.checked = true;
+      });
+    });
+
+    container.querySelector('[data-action="hide-all-ui"]').addEventListener('click', () => {
+      const visibility = {};
+      Object.keys(CONFIG.uiElements).forEach(key => {
+        visibility[key] = false;
+      });
+      saveUIElementsVisibility(visibility);
+      applyUIElementsVisibility(visibility);
+
+      // Update UI element toggles only
+      container.querySelectorAll('.qs-toggle-switch input[data-ui-element]').forEach(toggle => {
         toggle.checked = false;
       });
     });
@@ -958,15 +1096,19 @@
   // ============================================
 
   function init() {
-    log('Initializing Qurio Settings Panel v3.0.0...');
+    log('Initializing Qurio Settings Panel v3.7.0...');
 
     // Apply saved theme immediately
     const currentTheme = getCurrentTheme();
     applyTheme(currentTheme, false);
 
-    // Apply saved menu visibility
+    // Apply saved visibility settings (main menu, settings menu, UI elements)
     const menuVisibility = getMenuVisibility();
     applyMenuVisibility(menuVisibility);
+    const settingsMenuVisibility = getSettingsMenuVisibility();
+    applySettingsMenuVisibility(settingsMenuVisibility);
+    const uiElementsVisibility = getUIElementsVisibility();
+    applyUIElementsVisibility(uiElementsVisibility);
 
     // Create UI and initialize Usertour when DOM is ready
     if (document.readyState === 'loading') {
@@ -991,13 +1133,18 @@
     const debouncedApply = () => {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
+        // Re-apply all visibility settings
         const visibility = getMenuVisibility();
         applyMenuVisibility(visibility);
+        const settingsVisibility = getSettingsMenuVisibility();
+        applySettingsMenuVisibility(settingsVisibility);
+        const uiVisibility = getUIElementsVisibility();
+        applyUIElementsVisibility(uiVisibility);
       }, 100);
     };
 
     // Observe the sidebar for changes
-    const observer = new MutationObserver((mutations) => {
+    const sidebarObserver = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
           debouncedApply();
@@ -1006,18 +1153,44 @@
       }
     });
 
+    // Separate observer for body/content to catch UI elements like tabs
+    const contentObserver = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          // Check if any added nodes contain elements we care about
+          for (const node of mutation.addedNodes) {
+            if (node.nodeType === 1) { // Element node
+              // Look for tab navigations or nav elements
+              if (node.matches && (
+                node.matches('.n-tabs-nav, .hl_affiliate--nav, [class*="tabs"], [class*="nav"]') ||
+                node.querySelector('.n-tabs-nav, .hl_affiliate--nav, [class*="tabs"]')
+              )) {
+                debouncedApply();
+                break;
+              }
+            }
+          }
+        }
+      }
+    });
+
     // Start observing when sidebar exists
     const startObserving = () => {
       const sidebar = document.getElementById('sidebar-v2');
       if (sidebar) {
-        observer.observe(sidebar, { childList: true, subtree: true });
-        log('Menu observer started');
-        // Also re-apply immediately in case we missed initial load
-        debouncedApply();
+        sidebarObserver.observe(sidebar, { childList: true, subtree: true });
+        log('Sidebar observer started');
       } else {
         // Sidebar not found, try again shortly
         setTimeout(startObserving, 500);
       }
+
+      // Observe document body for all content changes (catches SPA navigation)
+      contentObserver.observe(document.body, { childList: true, subtree: true });
+      log('Body content observer started');
+
+      // Re-apply immediately in case we missed initial load
+      debouncedApply();
     };
 
     startObserving();
@@ -1035,14 +1208,24 @@
     },
     themes: CONFIG.themes,
 
-    // Menu visibility methods
+    // Main menu visibility methods
     getMenuVisibility: getMenuVisibility,
     setMenuItemVisibility: setMenuItemVisibility,
     menuItems: CONFIG.menuItems,
 
+    // Settings menu visibility methods
+    getSettingsMenuVisibility: getSettingsMenuVisibility,
+    setSettingsMenuItemVisibility: setSettingsMenuItemVisibility,
+    settingsMenuItems: CONFIG.settingsMenuItems,
+
+    // UI elements visibility methods
+    getUIElementsVisibility: getUIElementsVisibility,
+    setUIElementVisibility: setUIElementVisibility,
+    uiElements: CONFIG.uiElements,
+
     // Config
     config: CONFIG,
-    version: '3.0.1',
+    version: '3.7.0',
 
     // UI
     createSettings: createSettingsPanel,
@@ -1055,6 +1238,16 @@
     },
     onMenuChange: function(callback) {
       window.addEventListener('ql-menu-visibility-changed', (e) => {
+        callback(e.detail.item, e.detail.visible, e.detail.visibility);
+      });
+    },
+    onSettingsMenuChange: function(callback) {
+      window.addEventListener('ql-settings-menu-visibility-changed', (e) => {
+        callback(e.detail.item, e.detail.visible, e.detail.visibility);
+      });
+    },
+    onUIElementChange: function(callback) {
+      window.addEventListener('ql-ui-element-visibility-changed', (e) => {
         callback(e.detail.item, e.detail.visible, e.detail.visibility);
       });
     },

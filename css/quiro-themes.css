@@ -1,6 +1,6 @@
 /* ============================================
    QURIO THEMES - LUXURY REAL ESTATE CRM
-   Version: 2.0.0
+   Version: 2.1.0
 
    Note: All styles are wrapped to NOT apply when
    data-ql-theme="none" is set, preserving default
@@ -1651,5 +1651,368 @@ html[data-ql-theme="modern-tech"] #sidebar-v2 .hl_collapse-button:hover {
 }
 
 /* ============================================
-   END OF QURIO THEMES v2.0
+   QURIO SETTINGS PANEL
+   Floating settings panel with gear icon trigger
+   ============================================ */
+
+/* Settings Trigger Button */
+#qurio-settings-trigger {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99999;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--ql-primary, #1a2332);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+  animation: qs-fade-in 0.5s ease;
+}
+
+#qurio-settings-trigger:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+#qurio-settings-trigger svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--ql-accent, #c9a961);
+  transition: transform 0.5s ease;
+}
+
+#qurio-settings-trigger:hover svg {
+  transform: rotate(90deg);
+}
+
+#qurio-settings-trigger.active svg {
+  transform: rotate(180deg);
+}
+
+/* Settings Panel Container */
+#qurio-settings-container {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 99998;
+  width: 320px;
+  max-height: calc(100vh - 120px);
+  background: var(--ql-surface-elevated, #ffffff);
+  border: 1px solid var(--ql-border, #e0e0e0);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#qurio-settings-container.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* Panel Header */
+.qs-header {
+  padding: 16px 20px;
+  background: var(--ql-primary, #1a2332);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.qs-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--ql-font-body, system-ui, sans-serif);
+}
+
+.qs-close-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.qs-close-btn:hover {
+  opacity: 1;
+}
+
+/* Panel Content */
+.qs-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+/* Section */
+.qs-section {
+  border-bottom: 1px solid var(--ql-border, #e0e0e0);
+}
+
+.qs-section:last-child {
+  border-bottom: none;
+}
+
+.qs-section-header {
+  padding: 14px 20px;
+  background: var(--ql-surface, #f8f9fa);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.2s;
+  user-select: none;
+}
+
+.qs-section-header:hover {
+  background: var(--ql-surface-hover, #f0f1f2);
+}
+
+.qs-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ql-text-primary, #1a2332);
+  font-family: var(--ql-font-body, system-ui, sans-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.qs-section-arrow {
+  transition: transform 0.3s ease;
+  color: var(--ql-text-secondary, #6b7280);
+}
+
+.qs-section.expanded .qs-section-arrow {
+  transform: rotate(180deg);
+}
+
+.qs-section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.qs-section.expanded .qs-section-content {
+  max-height: 2000px;
+}
+
+.qs-section-inner {
+  padding: 12px 20px 16px;
+}
+
+/* Theme Buttons Grid */
+.qs-themes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.qs-theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 2px solid var(--ql-border, #e0e0e0);
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--btn-sidebar) 0%, var(--btn-sidebar) 50%, var(--btn-accent) 50%, var(--btn-accent) 100%);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.qs-theme-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.9);
+  z-index: 1;
+}
+
+.qs-theme-btn:hover {
+  border-color: var(--ql-primary, #1a2332);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.qs-theme-btn.active {
+  border-color: var(--ql-accent, #c9a961);
+  border-width: 2px;
+  box-shadow: 0 0 0 2px rgba(201, 169, 97, 0.3);
+}
+
+.qs-theme-icon {
+  font-size: 18px;
+  position: relative;
+  z-index: 2;
+}
+
+.qs-theme-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ql-text-primary, #1a2332);
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Toggle Switches */
+.qs-toggles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.qs-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-radius: 4px;
+}
+
+.qs-toggle-row:hover {
+  background: var(--ql-surface, #f8f9fa);
+}
+
+.qs-toggle-label {
+  font-size: 13px;
+  color: var(--ql-text-primary, #1a2332);
+  font-family: var(--ql-font-body, system-ui, sans-serif);
+}
+
+.qs-toggle-group-header {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ql-text-secondary, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 4px 4px 4px;
+  margin-top: 4px;
+  border-top: 1px solid var(--ql-border, #e0e0e0);
+}
+
+.qs-toggle-group-header:first-child {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.qs-toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.qs-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.qs-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #ccc;
+  border-radius: 24px;
+  transition: all 0.3s ease;
+}
+
+.qs-toggle-slider::before {
+  position: absolute;
+  content: '';
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.qs-toggle-switch input:checked + .qs-toggle-slider {
+  background: var(--ql-accent, #c9a961);
+}
+
+.qs-toggle-switch input:checked + .qs-toggle-slider::before {
+  transform: translateX(20px);
+}
+
+/* Bulk Actions */
+.qs-bulk-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ql-border, #e0e0e0);
+}
+
+.qs-bulk-btn {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--ql-border, #e0e0e0);
+  border-radius: 6px;
+  background: var(--ql-surface, #f8f9fa);
+  color: var(--ql-text-primary, #1a2332);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--ql-font-body, system-ui, sans-serif);
+}
+
+.qs-bulk-btn:hover {
+  background: var(--ql-primary, #1a2332);
+  color: white;
+  border-color: var(--ql-primary, #1a2332);
+}
+
+/* Settings Panel Animation */
+@keyframes qs-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsiveness for Settings Panel */
+@media (max-width: 768px) {
+  #qurio-settings-container {
+    width: calc(100vw - 40px);
+    right: 20px;
+    left: 20px;
+    bottom: 80px;
+  }
+}
+
+/* ============================================
+   END OF QURIO THEMES v2.1
    ============================================ */
