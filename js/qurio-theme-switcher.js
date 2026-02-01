@@ -1,4 +1,3 @@
-<script>
     /**
     * QURIO CONFIG
     * Version: 4.0.0
@@ -221,8 +220,7 @@
     console.log('[Qurio] Config loaded');
 
 })();
-</script>
-<script>
+
     /**
     * QURIO UTILS
     * Version: 4.0.0
@@ -293,8 +291,6 @@
     console.log('[Qurio] Utils loaded');
 
 })();
-</script>
-<script>
     /**
     * QURIO THEME
     * Version: 4.0.0
@@ -404,8 +400,6 @@
     console.log('[Qurio] Theme module loaded');
 
 })();
-</script>
-<script>
     /**
     * QURIO MENU VISIBILITY
     * Version: 4.0.0
@@ -545,8 +539,6 @@
     console.log('[Qurio] Menu visibility module loaded');
 
 })();
-</script>
-<script>
     /**
     * QURIO SETTINGS MENU VISIBILITY
     * Version: 4.0.0
@@ -686,8 +678,6 @@
     console.log('[Qurio] Settings menu visibility module loaded');
 
 })();
-</script>
-<script>
     /**
     * QURIO UI ELEMENTS VISIBILITY
     * Version: 4.1.0
@@ -968,9 +958,6 @@
     console.log('[Qurio] UI elements visibility module loaded (v4.1.0 with iframe support)');
 
 })();
-</script>
-
-<script>
     /**
     * QURIO USERTOUR
     * Version: 4.0.0
@@ -1075,8 +1062,6 @@
     console.log('[Qurio] Usertour module loaded');
 
 })();
-</script>
-<script>
     /**
     * QURIO PANEL
     * Version: 4.0.0
@@ -1461,8 +1446,6 @@
     console.log('[Qurio] Panel module loaded');
 
 })();
-</script>
-<script>
     /**
     * QURIO OBSERVER
     * Version: 4.0.0
@@ -1584,8 +1567,6 @@
     console.log('[Qurio] Observer module loaded');
 
 })();
-</script>
-<script>
     /**
     * QURIO INIT
     * Version: 4.0.0
@@ -1788,4 +1769,3 @@
     console.log('[Qurio] Init module loaded - v4.0.0 ready');
 
 })();
-</script>
