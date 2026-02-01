@@ -395,6 +395,11 @@
     // =========================================================================
 
     function init() {
+        // Debug: catch-all listener to see all incoming messages
+        window.addEventListener('message', function(e) {
+            console.log('RAW MESSAGE:', e.origin, e.data);
+        });
+
         // Add message listener
         window.addEventListener('message', handleMessage, false);
 
