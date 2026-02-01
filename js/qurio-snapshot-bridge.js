@@ -26,8 +26,7 @@
     const CONFIG = {
         // Origins allowed to send messages (your Snapshot app URLs)
         allowedOrigins: [
-            'https://snapshot.qurio.io',
-            'https://qurio-snapshot.vercel.app',
+            'https://docs.qurio.com',
             // Add localhost for development
             'http://localhost:3000',
             'http://localhost:5173',
