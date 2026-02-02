@@ -11,7 +11,7 @@
  * 3. Customize the action handlers to match your HighLevel implementation
  *
  * Usage in HighLevel Custom Code:
- * <script src="https://your-snapshot-domain.com/js/qurio-snapshot-bridge.js"></script>
+ * Add script tag with src="https://your-snapshot-domain.com/js/qurio-snapshot-bridge.js"
  *
  * Or inline the minified version directly.
  */
