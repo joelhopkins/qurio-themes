@@ -8,6 +8,115 @@
    ============================================ */
 
 /* ============================================
+
+   QURIO LEFT MENU separators and ordering
+
+   ============================================ */
+
+/* Make nav a flex container (it already is, but ensure order works) */
+.hl_nav-header nav {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Daily Snapshot - has fa-tachometer-alt icon */
+a.custom-link:has(i[aria-label="Daily Snapshot icon"]) { order: 10; }
+
+a.custom-link:has(i[aria-label="Daily Snapshot icon"]) {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+a.custom-link:has(i[aria-label="Daily Snapshot icon"])::after {
+  content: '';
+  position: absolute;
+  bottom: -0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  border-bottom: 2px solid rgba(208, 213, 221);
+}
+
+/* Divider */
+.hl_nav-header nav .divider { display: none; }
+
+/* Contacts Section */
+#sb_contacts { order: 20; }
+#sb_conversations { order: 30; }
+#sb_calendars { order: 40; }
+
+#sb_calendars {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+#sb_calendars::after {
+  content: '';
+  position: absolute;
+  bottom: -0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  border-bottom: 2px solid rgba(208, 213, 221);
+}
+
+/* Properties - has fa-home icon */
+a.custom-link:has(i[aria-label="Properties icon"]) { order: 50; }
+
+/* Qurio Docs - has fa-folder-open icon */
+a.custom-link:has(i[aria-label="Qurio Docs icon"]) { order:55; }
+
+#sb_email-marketing { order: 60; }
+
+/* Media - has fa-file-medical icon */
+a.custom-link:has(i[aria-label="Media icon"]) { order: 60; }
+
+#sb_app-media { order: 70; }
+
+#sb_app-media {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+#sb_app-media::after {
+  content: '';
+  position: absolute;
+  bottom: -0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  border-bottom: 2px solid rgba(208, 213, 221);
+}
+
+/* Other Section */
+#sb_automation { order: 110; }
+#sb_sites { order: 120; }
+#sb_reputation { order: 130}
+#sb_reporting { order: 140}
+
+/* Less Used / Never Used */
+#sb_launchpad { order: 1110; }
+#sb_dashboard { order: 1120; }
+#sb_app-marketplace { order: 1130; }
+#sb_opportunities { order: 45; }
+#sb_memberships { order: 46; }
+#sb_payments { order: 47; }
+
+#sb_payments {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+#sb_payments::after {
+  content: '';
+  position: absolute;
+  bottom: -0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  border-bottom: 2px solid rgba(208, 213, 221);
+}
+
+/* Put remaining custom links at end */
+#sidebar-v2 div div.lead-connector div.h1_nav-header a { order: 10000; }
+
+/* ============================================
    BASE THEME VARIABLES (Light/Default - Navy & Gold)
    Only apply when a theme is active (not "none")
    ============================================ */
