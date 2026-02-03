@@ -515,8 +515,8 @@ html:not([data-ql-theme="none"]) .hl_nav-left a {
             box-shadow var(--ql-duration-fast) var(--ql-ease-out) !important;
     border-radius: var(--ql-radius) !important;
     margin: 1px var(--ql-space-2) !important;
-    padding: var(--ql-space-2) var(--ql-space-3) !important;
-    min-height: 38px !important;
+    padding: 2px 10px !important;
+    min-height: 28px !important;
     display: flex !important;
     align-items: center !important;
     gap: var(--ql-space-3) !important;
@@ -2040,7 +2040,7 @@ a.custom-link:has(i[aria-label="Daily Snapshot icon"])::after {
 }
 
 /* Divider */
-.hl_nav-header nav .divider { display: none; }
+html:not([data-ql-theme="none"]) aside#sidebar-v2 div.divider { display: none !important; }
 
 /* Contacts Section */
 #sb_contacts { order: 20; }
@@ -2118,6 +2118,63 @@ a.custom-link:has(i[aria-label="Media icon"]) { order: 60; }
 
 /* Put remaining custom links at end */
 #sidebar-v2 div div.lead-connector div.h1_nav-header a { order: 10000; }
+
+/* Theme-Specific Divider Overrides */
+html:not([data-ql-theme="none"]) a.custom-link:has(i[aria-label="Daily Snapshot icon"]) {
+    position: relative;
+    margin-bottom: 1.2rem;
+}
+
+html:not([data-ql-theme="none"]) a.custom-link:has(i[aria-label="Daily Snapshot icon"])::after {
+    content: '';
+    position: absolute;
+    bottom: -0.6rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    border-bottom: 2px solid var(--ql-border-color, rgba(208, 213, 221));
+}
+
+html:not([data-ql-theme="none"]) #sb_calendars {
+    position: relative;
+    margin-bottom: 1.2rem;
+}
+
+html:not([data-ql-theme="none"]) #sb_calendars::after {
+    content: '';
+    position: absolute;
+    bottom: -0.6rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    border-bottom: 2px solid var(--ql-border-color, rgba(208, 213, 221));
+}
+
+html:not([data-ql-theme="none"]) #sb_app-media {
+    position: relative;
+    margin-bottom: 1.2rem;
+}
+
+html:not([data-ql-theme="none"]) #sb_app-media::after {
+    content: '';
+    position: absolute;
+    bottom: -0.6rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    border-bottom: 2px solid var(--ql-border-color, rgba(208, 213, 221));
+}
+
+html:not([data-ql-theme="none"]) #sb_payments {
+    position: relative;
+    margin-bottom: 1.2rem;
+}
+
+html:not([data-ql-theme="none"]) #sb_payments::after {
+    content: '';
+    position: absolute;
+    bottom: -0.6rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    border-bottom: 2px solid var(--ql-border-color, rgba(208, 213, 221));
+}
 
 /* ============================================
    END LEFT MENU STYLES AND ORDERING
