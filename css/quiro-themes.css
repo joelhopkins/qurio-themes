@@ -2125,15 +2125,17 @@ html:not([data-ql-theme="none"]) a.custom-link > span.h-5.w-5 {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    padding-top: 2px !important;
 }
 
 html:not([data-ql-theme="none"]) a.custom-link > span.h-5.w-5 > i {
     font-size: 1.125rem;
     line-height: 1;
     color: var(--ql-sidebar-text);
-    opacity: 0.7;
+    opacity: 1;
     transition: opacity var(--ql-duration-fast) var(--ql-ease-out),
                 transform var(--ql-duration-fast) var(--ql-ease-out);
+    margin-left: -10px;
 }
 
 html:not([data-ql-theme="none"]) a.custom-link:hover > span.h-5.w-5 > i {
