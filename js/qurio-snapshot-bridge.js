@@ -70,6 +70,20 @@
             // Z-index for modal overlay
             zIndex: 999999,
         },
+
+        // Slideout configuration
+        slideout: {
+            // Default width
+            defaultWidth: '400px',
+            // Timeout for slideout ready signal (ms)
+            readyTimeout: 10000,
+            // Allow closing by clicking backdrop
+            closeOnBackdropClick: true,
+            // Allow closing with Escape key
+            closeOnEscape: true,
+            // Z-index for slideout overlay
+            zIndex: 999998,
+        },
     };
 
     // =========================================================================
@@ -384,6 +398,62 @@
             handleModalResize(payload);
             return { success: true };
         },
+
+        // =====================================================================
+        // SLIDEOUT ACTIONS
+        // =====================================================================
+
+        /**
+         * Open a slideout panel with iframe content.
+         * @param {object} payload
+         * @param {string} payload.url - URL to load in the slideout
+         * @param {string} payload.requestId - Unique ID for callback matching
+         * @param {string} [payload.title] - Slideout title
+         * @param {string} [payload.subtitle] - Slideout subtitle
+         * @param {string|number} [payload.width] - Custom width (default: 400px)
+         * @param {boolean} [payload.closeOnBackdropClick] - Close on backdrop click
+         * @param {boolean} [payload.closeOnEscape] - Close on Escape key
+         * @param {boolean} [payload.skipReady] - Show immediately on load
+         * @param {string} _action - Action name (unused)
+         * @param {string} sourceOrigin - Origin of the requesting iframe
+         */
+        OPEN_SLIDEOUT: function(payload, _action, sourceOrigin) {
+            log('OPEN_SLIDEOUT triggered:', payload);
+            return openSlideout(payload, sourceOrigin);
+        },
+
+        /**
+         * Close the current slideout (can be called from any iframe).
+         * @param {object} payload
+         * @param {string} [payload.result] - Result type ('submit', 'cancel', etc.)
+         * @param {object} [payload.data] - Data to return
+         */
+        CLOSE_SLIDEOUT: function(payload) {
+            log('CLOSE_SLIDEOUT triggered:', payload);
+            closeSlideout(payload.result || 'close', payload.data);
+            return { success: true };
+        },
+
+        /**
+         * Signal that slideout content is ready (called from slideout iframe).
+         */
+        SLIDEOUT_READY: function(payload) {
+            log('SLIDEOUT_READY triggered:', payload);
+            handleSlideoutReady();
+            return { success: true };
+        },
+
+        /**
+         * Close slideout with result (called from slideout iframe).
+         * @param {object} payload
+         * @param {string} [payload.result] - Result type
+         * @param {object} [payload.data] - Data to return
+         */
+        SLIDEOUT_CLOSE: function(payload) {
+            log('SLIDEOUT_CLOSE triggered:', payload);
+            closeSlideout(payload.result || 'close', payload.data);
+            return { success: true };
+        },
     };
 
     // =========================================================================
@@ -396,6 +466,21 @@
         currentRequestId: null,
         readyTimeout: null,
         sourceOrigin: null,  // Origin of the iframe that requested the modal
+    };
+
+    // =========================================================================
+    // SLIDEOUT STATE
+    // =========================================================================
+
+    const slideoutState = {
+        isOpen: false,
+        currentSlideout: null,
+        currentRequestId: null,
+        readyTimeout: null,
+        sourceOrigin: null,
+        iframe: null,
+        loading: null,
+        escapeHandler: null,
     };
 
     // =========================================================================
@@ -933,6 +1018,438 @@
     }
 
     // =========================================================================
+    // SLIDEOUT FUNCTIONS
+    // =========================================================================
+
+    /**
+     * Create and inject slideout styles if not already present.
+     */
+    function ensureSlideoutStyles() {
+        if (document.getElementById('qurio-slideout-styles')) {
+            return;
+        }
+
+        const styles = document.createElement('style');
+        styles.id = 'qurio-slideout-styles';
+        styles.textContent = `
+            .qurio-slideout-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: ${CONFIG.slideout.zIndex};
+                opacity: 0;
+                transition: opacity 0.3s ease-out;
+            }
+
+            .qurio-slideout-overlay.qurio-slideout-visible {
+                opacity: 1;
+            }
+
+            .qurio-slideout-panel {
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                background: #fff;
+                box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+                display: flex;
+                flex-direction: column;
+                z-index: ${CONFIG.slideout.zIndex + 1};
+                transform: translateX(100%);
+                transition: transform 0.3s ease-out;
+            }
+
+            .qurio-slideout-overlay.qurio-slideout-visible .qurio-slideout-panel {
+                transform: translateX(0);
+            }
+
+            .qurio-slideout-header {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                padding: 16px 20px;
+                border-bottom: 1px solid #e5e7eb;
+                background: #f9fafb;
+                flex-shrink: 0;
+            }
+
+            .qurio-slideout-header-content {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .qurio-slideout-title {
+                font-size: 18px;
+                font-weight: 600;
+                color: #111827;
+                margin: 0;
+                line-height: 1.3;
+            }
+
+            .qurio-slideout-subtitle {
+                font-size: 13px;
+                color: #6b7280;
+                margin: 4px 0 0 0;
+                line-height: 1.4;
+            }
+
+            .qurio-slideout-close-btn {
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 6px;
+                color: #6b7280;
+                transition: background-color 0.15s, color 0.15s;
+                margin-left: 12px;
+                flex-shrink: 0;
+            }
+
+            .qurio-slideout-close-btn:hover {
+                background: #e5e7eb;
+                color: #111827;
+            }
+
+            .qurio-slideout-close-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .qurio-slideout-body {
+                flex: 1;
+                overflow: hidden;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .qurio-slideout-iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+                flex: 1;
+            }
+
+            .qurio-slideout-loading {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+            }
+
+            .qurio-slideout-spinner {
+                width: 40px;
+                height: 40px;
+                border: 3px solid #e5e7eb;
+                border-top-color: #3b82f6;
+                border-radius: 50%;
+                animation: qurio-slideout-spin 0.8s linear infinite;
+            }
+
+            @keyframes qurio-slideout-spin {
+                to { transform: rotate(360deg); }
+            }
+
+            .qurio-slideout-error {
+                text-align: center;
+                padding: 40px 20px;
+                color: #6b7280;
+            }
+
+            .qurio-slideout-error-icon {
+                font-size: 48px;
+                margin-bottom: 16px;
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+
+    /**
+     * Open a slideout panel with an iframe.
+     * @param {object} options
+     * @param {string} options.url - URL to load in the slideout iframe
+     * @param {string} options.requestId - Unique ID for callback matching
+     * @param {string} [options.title] - Slideout title
+     * @param {string} [options.subtitle] - Slideout subtitle
+     * @param {string|number} [options.width] - Custom width (default: 400px)
+     * @param {boolean} [options.closeOnBackdropClick] - Override default backdrop click behavior
+     * @param {boolean} [options.closeOnEscape] - Override default escape key behavior
+     * @param {boolean} [options.skipReady] - Show iframe immediately on load
+     * @param {string} sourceOrigin - Origin of the requesting iframe
+     * @returns {object} Result object
+     */
+    function openSlideout(options, sourceOrigin) {
+        const skipReady = options.skipReady === true;
+
+        if (slideoutState.isOpen) {
+            warn('Slideout already open, ignoring request');
+            return { success: false, error: 'Slideout already open' };
+        }
+
+        // Validate URL
+        if (!options.url) {
+            return { success: false, error: 'No URL provided' };
+        }
+
+        if (!isAllowedModalUrl(options.url)) {
+            error('Slideout URL not in allowed origins:', options.url);
+            return { success: false, error: 'URL not allowed' };
+        }
+
+        ensureSlideoutStyles();
+
+        // Parse width
+        let width = CONFIG.slideout.defaultWidth;
+        if (options.width) {
+            if (typeof options.width === 'number') {
+                width = options.width + 'px';
+            } else if (typeof options.width === 'string') {
+                width = options.width;
+            }
+        }
+
+        // Create slideout elements
+        const overlay = document.createElement('div');
+        overlay.className = 'qurio-slideout-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        if (options.title) {
+            overlay.setAttribute('aria-label', options.title);
+        }
+
+        const panel = document.createElement('div');
+        panel.className = 'qurio-slideout-panel';
+        panel.style.width = width;
+
+        // Header
+        const header = document.createElement('div');
+        header.className = 'qurio-slideout-header';
+
+        const headerContent = document.createElement('div');
+        headerContent.className = 'qurio-slideout-header-content';
+
+        if (options.title) {
+            const title = document.createElement('h2');
+            title.className = 'qurio-slideout-title';
+            title.textContent = options.title;
+            headerContent.appendChild(title);
+        }
+
+        if (options.subtitle) {
+            const subtitle = document.createElement('p');
+            subtitle.className = 'qurio-slideout-subtitle';
+            subtitle.textContent = options.subtitle;
+            headerContent.appendChild(subtitle);
+        }
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'qurio-slideout-close-btn';
+        closeBtn.setAttribute('aria-label', 'Close slideout');
+        closeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>';
+        closeBtn.addEventListener('click', function() {
+            closeSlideout('cancel');
+        });
+
+        header.appendChild(headerContent);
+        header.appendChild(closeBtn);
+
+        // Body
+        const body = document.createElement('div');
+        body.className = 'qurio-slideout-body';
+
+        // Loading indicator
+        const loading = document.createElement('div');
+        loading.className = 'qurio-slideout-loading';
+        loading.innerHTML = '<div class="qurio-slideout-spinner"></div>';
+
+        // Iframe
+        const iframe = document.createElement('iframe');
+        iframe.className = 'qurio-slideout-iframe';
+        iframe.style.opacity = '0';
+        iframe.src = options.url;
+
+        body.appendChild(loading);
+        body.appendChild(iframe);
+
+        panel.appendChild(header);
+        panel.appendChild(body);
+        overlay.appendChild(panel);
+
+        // Event handlers - backdrop click
+        const shouldCloseOnBackdrop = options.closeOnBackdropClick !== undefined
+            ? options.closeOnBackdropClick
+            : CONFIG.slideout.closeOnBackdropClick;
+
+        if (shouldCloseOnBackdrop) {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    closeSlideout('cancel');
+                }
+            });
+        }
+
+        // Escape key handler
+        const shouldCloseOnEscape = options.closeOnEscape !== undefined
+            ? options.closeOnEscape
+            : CONFIG.slideout.closeOnEscape;
+
+        if (shouldCloseOnEscape) {
+            slideoutState.escapeHandler = function(e) {
+                if (e.key === 'Escape' && slideoutState.isOpen) {
+                    closeSlideout('cancel');
+                }
+            };
+            document.addEventListener('keydown', slideoutState.escapeHandler);
+        }
+
+        // Handle iframe load
+        iframe.addEventListener('load', function() {
+            log('Slideout iframe loaded');
+            if (skipReady) {
+                log('skipReady enabled - showing slideout iframe immediately');
+                loading.style.display = 'none';
+                iframe.style.opacity = '1';
+            }
+        });
+
+        iframe.addEventListener('error', function() {
+            error('Slideout iframe failed to load');
+            loading.innerHTML = '<div class="qurio-slideout-error"><div class="qurio-slideout-error-icon">⚠️</div><div>Failed to load content</div></div>';
+        });
+
+        // Set timeout for ready signal (only if not skipping ready)
+        if (!skipReady) {
+            slideoutState.readyTimeout = setTimeout(function() {
+                if (slideoutState.isOpen && loading.parentNode) {
+                    warn('Slideout ready timeout - showing iframe anyway');
+                    loading.style.display = 'none';
+                    iframe.style.opacity = '1';
+                }
+            }, CONFIG.slideout.readyTimeout);
+        }
+
+        // Add to DOM
+        document.body.appendChild(overlay);
+
+        // Trigger animation
+        requestAnimationFrame(function() {
+            overlay.classList.add('qurio-slideout-visible');
+        });
+
+        // Update state
+        slideoutState.isOpen = true;
+        slideoutState.currentSlideout = overlay;
+        slideoutState.currentRequestId = options.requestId;
+        slideoutState.sourceOrigin = sourceOrigin;
+        slideoutState.iframe = iframe;
+        slideoutState.loading = loading;
+
+        // Focus management
+        closeBtn.focus();
+
+        log('Slideout opened:', options);
+        return { success: true };
+    }
+
+    /**
+     * Close the current slideout.
+     * @param {string} result - 'submit', 'cancel', 'close', or custom result
+     * @param {object} [data] - Optional data to return
+     */
+    function closeSlideout(result, data) {
+        if (!slideoutState.isOpen || !slideoutState.currentSlideout) {
+            return;
+        }
+
+        log('Closing slideout with result:', result, data);
+
+        // Clear timeout
+        if (slideoutState.readyTimeout) {
+            clearTimeout(slideoutState.readyTimeout);
+            slideoutState.readyTimeout = null;
+        }
+
+        // Remove escape handler
+        if (slideoutState.escapeHandler) {
+            document.removeEventListener('keydown', slideoutState.escapeHandler);
+            slideoutState.escapeHandler = null;
+        }
+
+        const overlay = slideoutState.currentSlideout;
+        const requestId = slideoutState.currentRequestId;
+
+        // Animate out
+        overlay.classList.remove('qurio-slideout-visible');
+
+        // Send result back to the requesting iframe
+        if (requestId) {
+            const response = {
+                type: 'QURIO_SLIDEOUT_RESULT',
+                requestId: requestId,
+                result: result || 'close',
+                data: data || null,
+                timestamp: Date.now(),
+            };
+
+            // Send to all iframes (the requesting one will match by requestId)
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(function(frame) {
+                // Don't send to the slideout iframe itself
+                if (frame === slideoutState.iframe) return;
+
+                try {
+                    frame.contentWindow.postMessage(response, '*');
+                } catch (e) {
+                    // Ignore cross-origin errors
+                }
+            });
+
+            log('Sent slideout result:', response);
+        }
+
+        // Remove from DOM after animation
+        setTimeout(function() {
+            if (overlay.parentNode) {
+                overlay.parentNode.removeChild(overlay);
+            }
+        }, 300);
+
+        // Reset state
+        slideoutState.isOpen = false;
+        slideoutState.currentSlideout = null;
+        slideoutState.currentRequestId = null;
+        slideoutState.sourceOrigin = null;
+        slideoutState.iframe = null;
+        slideoutState.loading = null;
+    }
+
+    /**
+     * Handle slideout ready signal from iframe.
+     */
+    function handleSlideoutReady() {
+        if (slideoutState.isOpen && slideoutState.loading && slideoutState.iframe) {
+            log('Slideout content ready');
+            if (slideoutState.readyTimeout) {
+                clearTimeout(slideoutState.readyTimeout);
+                slideoutState.readyTimeout = null;
+            }
+            slideoutState.loading.style.display = 'none';
+            slideoutState.iframe.style.opacity = '1';
+        }
+    }
+
+    // =========================================================================
     // HELPER FUNCTIONS
     // =========================================================================
 
@@ -1093,6 +1610,22 @@
             // Check if modal is open
             isModalOpen: function() {
                 return modalState.isOpen;
+            },
+
+            // Slideout state
+            slideoutState: slideoutState,
+
+            // Open a slideout programmatically (from parent context)
+            openSlideout: function(options) {
+                return openSlideout(options, window.location.origin);
+            },
+
+            // Close the current slideout
+            closeSlideout: closeSlideout,
+
+            // Check if slideout is open
+            isSlideoutOpen: function() {
+                return slideoutState.isOpen;
             },
         };
     }
