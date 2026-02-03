@@ -439,8 +439,7 @@ html:not([data-ql-theme="none"]) .main-sidebar,
 html:not([data-ql-theme="none"]) nav.sidebar {
     background-color: var(--ql-sidebar-bg) !important;
     border-right: 2px solid var(--ql-sidebar-accent) !important;
-    width: 264px !important;
-    min-width: 264px !important;
+    /* Width removed to use default HighLevel sidebar width */
 }
 
 /* Inner sidebar container - use default Tailwind w-56 (224px) */
