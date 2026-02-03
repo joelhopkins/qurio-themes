@@ -211,7 +211,7 @@
 },
 
     // UI Settings
-    defaultTheme: 'light',
+    defaultTheme: 'none',
     showSettings: true,
     position: 'bottom-right',
     debug: false
@@ -358,7 +358,7 @@
 
     const html = document.documentElement;
 
-    if (themeName !== 'light') {
+    if (themeName !== 'none') {
     html.setAttribute('data-ql-theme', themeName);
 } else {
     html.removeAttribute('data-ql-theme');
@@ -1032,7 +1032,7 @@
     log('Usertour initialized with token');
 
     var locationId = getLocationId();
-    var currentTheme = window.Qurio.theme ? window.Qurio.theme.getCurrent() : 'light';
+    var currentTheme = window.Qurio.theme ? window.Qurio.theme.getCurrent() : 'none';
 
     if (locationId) {
     window.usertour.identify(locationId, {
@@ -1101,7 +1101,7 @@
 }
 
     // Get current states
-    var currentTheme = window.Qurio.theme ? window.Qurio.theme.getCurrent() : 'light';
+    var currentTheme = window.Qurio.theme ? window.Qurio.theme.getCurrent() : 'none';
     var menuVisibility = window.Qurio.menuVisibility ? window.Qurio.menuVisibility.get() : {};
     var settingsMenuVisibility = window.Qurio.settingsMenuVisibility ? window.Qurio.settingsMenuVisibility.get() : {};
     var uiElementsVisibility = window.Qurio.uiElementsVisibility ? window.Qurio.uiElementsVisibility.get() : {};
@@ -1664,7 +1664,7 @@
     return window.Qurio.theme ? window.Qurio.theme.apply(themeName, save) : false;
 },
     get current() {
-    return window.Qurio.theme ? window.Qurio.theme.getCurrent() : 'light';
+    return window.Qurio.theme ? window.Qurio.theme.getCurrent() : 'none';
 },
     themes: CONFIG.themes,
 
@@ -1740,7 +1740,7 @@
 },
     next: function() {
     var themes = Object.keys(CONFIG.themes);
-    var currentTheme = window.Qurio.theme ? window.Qurio.theme.getCurrent() : 'light';
+    var currentTheme = window.Qurio.theme ? window.Qurio.theme.getCurrent() : 'none';
     var currentIndex = themes.indexOf(currentTheme);
     var nextIndex = (currentIndex + 1) % themes.length;
     if (window.Qurio.theme) {
@@ -1750,7 +1750,7 @@
 },
     prev: function() {
     var themes = Object.keys(CONFIG.themes);
-    var currentTheme = window.Qurio.theme ? window.Qurio.theme.getCurrent() : 'light';
+    var currentTheme = window.Qurio.theme ? window.Qurio.theme.getCurrent() : 'none';
     var currentIndex = themes.indexOf(currentTheme);
     var prevIndex = (currentIndex - 1 + themes.length) % themes.length;
     if (window.Qurio.theme) {

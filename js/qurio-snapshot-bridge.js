@@ -331,6 +331,7 @@
          * @param {string} [payload.closeButtonText] - Custom close button text
          * @param {boolean} [payload.closeOnBackdropClick] - Close on backdrop click
          * @param {boolean} [payload.closeOnEscape] - Close on Escape key
+         * @param {boolean} [payload.skipReady] - Show immediately on load (for third-party pages)
          * @param {string} _action - Action name (unused)
          * @param {string} sourceOrigin - Origin of the requesting iframe
          */
@@ -643,10 +644,12 @@
      * @param {string} [options.closeButtonText] - Text for footer close button
      * @param {boolean} [options.closeOnBackdropClick] - Override default backdrop click behavior
      * @param {boolean} [options.closeOnEscape] - Override default escape key behavior
+     * @param {boolean} [options.skipReady] - Show iframe immediately on load (skip waiting for MODAL_READY)
      * @param {string} sourceOrigin - Origin of the requesting iframe
      * @returns {object} Result object
      */
     function openModal(options, sourceOrigin) {
+        const skipReady = options.skipReady === true;
         if (modalState.isOpen) {
             warn('Modal already open, ignoring request');
             return { success: false, error: 'Modal already open' };
@@ -773,8 +776,13 @@
         // Handle iframe load
         iframe.addEventListener('load', function() {
             log('Modal iframe loaded');
-            // Don't hide loading yet - wait for MODAL_READY message
-            // This gives the iframe content a chance to initialize
+            // If skipReady is true, show immediately on load
+            if (skipReady) {
+                log('skipReady enabled - showing iframe immediately');
+                loading.style.display = 'none';
+                iframe.style.opacity = '1';
+            }
+            // Otherwise, wait for MODAL_READY message from the iframe content
         });
 
         iframe.addEventListener('error', function() {
@@ -782,14 +790,16 @@
             loading.innerHTML = '<div class="qurio-modal-error"><div class="qurio-modal-error-icon">⚠️</div><div>Failed to load content</div></div>';
         });
 
-        // Set timeout for ready signal
-        modalState.readyTimeout = setTimeout(function() {
-            if (modalState.isOpen && loading.parentNode) {
-                warn('Modal ready timeout - showing iframe anyway');
-                loading.style.display = 'none';
-                iframe.style.opacity = '1';
-            }
-        }, CONFIG.modal.readyTimeout);
+        // Set timeout for ready signal (only if not skipping ready)
+        if (!skipReady) {
+            modalState.readyTimeout = setTimeout(function() {
+                if (modalState.isOpen && loading.parentNode) {
+                    warn('Modal ready timeout - showing iframe anyway');
+                    loading.style.display = 'none';
+                    iframe.style.opacity = '1';
+                }
+            }, CONFIG.modal.readyTimeout);
+        }
 
         // Add to DOM
         document.body.appendChild(overlay);
