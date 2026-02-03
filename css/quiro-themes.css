@@ -443,12 +443,8 @@ html:not([data-ql-theme="none"]) nav.sidebar {
     min-width: 264px !important;
 }
 
-/* Inner sidebar container - override Tailwind w-56 */
-html:not([data-ql-theme="none"]) #sidebar-v2 > div.w-56,
-html:not([data-ql-theme="none"]) #sidebar-v2 > div[class*="w-56"] {
-    width: 264px !important;
-    min-width: 264px !important;
-}
+/* Inner sidebar container - use default Tailwind w-56 (224px) */
+/* Width override removed to use default HighLevel sidebar width */
 
 /* Agency Logo Container */
 html:not([data-ql-theme="none"]) .agency-logo-container {
