@@ -2167,7 +2167,7 @@ html[data-ql-theme="modern-tech"] a.custom-link.active > span.h-5.w-5 > i {
 /* Theme-Specific Divider Overrides */
 html:not([data-ql-theme="none"]) #sidebar-v2 nav a.custom-link:has(i[aria-label="Daily Snapshot icon"]) {
     position: relative;
-    margin-bottom: 1.2rem !important;
+    margin-bottom: 0.95rem !important;
 }
 
 html:not([data-ql-theme="none"]) #sidebar-v2 nav a.custom-link:has(i[aria-label="Daily Snapshot icon"])::after {
@@ -2181,7 +2181,7 @@ html:not([data-ql-theme="none"]) #sidebar-v2 nav a.custom-link:has(i[aria-label=
 
 html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_calendars {
     position: relative;
-    margin-bottom: 1.2rem !important;
+    margin-bottom: 0.95rem !important;
 }
 
 html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_calendars::after {
@@ -2195,7 +2195,7 @@ html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_calendars::after {
 
 html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_app-media {
     position: relative;
-    margin-bottom: 1.2rem !important;
+    margin-bottom: 0.95rem !important;
 }
 
 html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_app-media::after {
@@ -2209,7 +2209,7 @@ html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_app-media::after {
 
 html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_payments {
     position: relative;
-    margin-bottom: 1.2rem !important;
+    margin-bottom: 0.95rem !important;
 }
 
 html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_payments::after {
