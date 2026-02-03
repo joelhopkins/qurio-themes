@@ -35,6 +35,7 @@
 
         // Origins allowed for modal URLs (can be same as above or more restrictive)
         allowedModalOrigins: [
+            'https://qurio.hd.pics',
             'https://docs.qurio.com',
             'http://localhost:3000',
             'http://localhost:5173',
