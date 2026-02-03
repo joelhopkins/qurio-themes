@@ -2163,12 +2163,12 @@ html[data-ql-theme="modern-tech"] a.custom-link.active > span.h-5.w-5 > i {
 }
 
 /* Theme-Specific Divider Overrides */
-html:not([data-ql-theme="none"]) #sidebar-v2 a.custom-link:has(i[aria-label="Daily Snapshot icon"]) {
+html:not([data-ql-theme="none"]) #sidebar-v2 nav a.custom-link:has(i[aria-label="Daily Snapshot icon"]) {
     position: relative;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.2rem !important;
 }
 
-html:not([data-ql-theme="none"]) #sidebar-v2 a.custom-link:has(i[aria-label="Daily Snapshot icon"])::after {
+html:not([data-ql-theme="none"]) #sidebar-v2 nav a.custom-link:has(i[aria-label="Daily Snapshot icon"])::after {
     content: '';
     position: absolute;
     bottom: -0.6rem;
@@ -2177,12 +2177,12 @@ html:not([data-ql-theme="none"]) #sidebar-v2 a.custom-link:has(i[aria-label="Dai
     border-bottom: 2px solid var(--ql-border-color, rgba(208, 213, 221)) !important;
 }
 
-html:not([data-ql-theme="none"]) #sidebar-v2 #sb_calendars {
+html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_calendars {
     position: relative;
     margin-bottom: 1.2rem !important;
 }
 
-html:not([data-ql-theme="none"]) #sidebar-v2 #sb_calendars::after {
+html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_calendars::after {
     content: '';
     position: absolute;
     bottom: -0.6rem;
@@ -2191,12 +2191,12 @@ html:not([data-ql-theme="none"]) #sidebar-v2 #sb_calendars::after {
     border-bottom: 2px solid var(--ql-border-color, rgba(208, 213, 221)) !important;
 }
 
-html:not([data-ql-theme="none"]) #sidebar-v2 #sb_app-media {
+html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_app-media {
     position: relative;
     margin-bottom: 1.2rem !important;
 }
 
-html:not([data-ql-theme="none"]) #sidebar-v2 #sb_app-media::after {
+html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_app-media::after {
     content: '';
     position: absolute;
     bottom: -0.6rem;
@@ -2205,12 +2205,12 @@ html:not([data-ql-theme="none"]) #sidebar-v2 #sb_app-media::after {
     border-bottom: 2px solid var(--ql-border-color, rgba(208, 213, 221)) !important;
 }
 
-html:not([data-ql-theme="none"]) #sidebar-v2 #sb_payments {
+html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_payments {
     position: relative;
     margin-bottom: 1.2rem !important;
 }
 
-html:not([data-ql-theme="none"]) #sidebar-v2 #sb_payments::after {
+html:not([data-ql-theme="none"]) #sidebar-v2 nav a#sb_payments::after {
     content: '';
     position: absolute;
     bottom: -0.6rem;
