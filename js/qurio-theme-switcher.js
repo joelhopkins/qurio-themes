@@ -358,11 +358,8 @@
 
     const html = document.documentElement;
 
-    if (themeName !== 'none') {
+    // Always set the attribute - 'none' disables theme styles via CSS :not([data-ql-theme="none"])
     html.setAttribute('data-ql-theme', themeName);
-} else {
-    html.removeAttribute('data-ql-theme');
-}
 
     if (savePreference) {
     saveTheme(themeName);
