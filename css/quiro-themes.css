@@ -497,8 +497,8 @@ html:not([data-ql-theme="none"]) .nav-section-label {
     font-weight: 600 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.08em !important;
-    color: rgba(255, 255, 255, 0.5) !important;
-    padding: var(--ql-space-3) var(--ql-space-3) var(--ql-space-2) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    padding: var(--ql-space-1) var(--ql-space-2) var(--ql-space-1) !important;
     display: block !important;
 }
 
@@ -584,6 +584,7 @@ html:not([data-ql-theme="none"]) .sidebar nav a img {
     width: 20px !important;
     height: 20px !important;
     flex-shrink: 0 !important;
+    margin-right: 0px !important;
 }
 
 html:not([data-ql-theme="none"]) #sidebar-v2 nav a:hover img,
@@ -2061,16 +2062,16 @@ html:not([data-ql-theme="none"]) aside#sidebar-v2 div.divider { display: none !i
     border-bottom: 2px solid rgba(208, 213, 221);
 }
 
-/* Properties - has fa-home icon */
-a.custom-link:has(i[aria-label="Properties icon"]) { order: 50; }
+/* Listings - has fa-home icon */
+a.custom-link:has(i[aria-label="Listings icon"]) { order: 50; }
 
-/* Qurio Docs - has fa-folder-open icon */
-a.custom-link:has(i[aria-label="Qurio Docs icon"]) { order:55; }
+/* Contracts - has fa-folder-open icon */
+a.custom-link:has(i[aria-label="Contracts icon"]) { order:55; }
 
 #sb_email-marketing { order: 60; }
 
 /* Media - has fa-file-medical icon */
-a.custom-link:has(i[aria-label="Media icon"]) { order: 60; }
+a.custom-link:has(i[aria-label="Property Marketing icon"]) { order: 60; }
 
 #sb_app-media { order: 70; }
 
@@ -2126,6 +2127,7 @@ html:not([data-ql-theme="none"]) a.custom-link > span.h-5.w-5 {
     justify-content: center;
     flex-shrink: 0;
     padding-top: 2px !important;
+    margin-right: 0px !important;
 }
 
 html:not([data-ql-theme="none"]) a.custom-link > span.h-5.w-5 > i {
