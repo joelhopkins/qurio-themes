@@ -1470,23 +1470,21 @@
 
         // Method 1: If using Vue Router or React Router exposed globally
         if (window.$router && typeof window.$router.push === 'function') {
+            log('Navigating via $router:', normalizedPath);
             window.$router.push(normalizedPath);
             return;
         }
 
         // Method 2: If there's a global navigate function
         if (typeof window.navigateTo === 'function') {
+            log('Navigating via window.navigateTo:', normalizedPath);
             window.navigateTo(normalizedPath);
             return;
         }
 
-        // Method 3: Dispatch event for app to handle
-        window.dispatchEvent(new CustomEvent('qurio:navigate', {
-            detail: { path: normalizedPath }
-        }));
-
-        // Method 4: Fallback to window.location (causes full page reload)
-        // window.location.href = normalizedPath;
+        // Method 3: Navigate via location (works reliably in HighLevel)
+        log('Navigating via location:', normalizedPath);
+        window.location.href = normalizedPath;
     }
 
     /**
