@@ -27,6 +27,7 @@
         // Origins allowed to send messages (your Snapshot app URLs)
         allowedOrigins: [
             'https://docs.qurio.com',
+            'https://qurio.hd.pics',
             // Add localhost for development
             'http://localhost:3000',
             'http://localhost:5173',
@@ -61,8 +62,8 @@
             defaultSize: 'medium',
             // Max height for modal content area
             maxHeight: '85vh',
-            // Timeout for modal ready signal (ms)
-            readyTimeout: 10000,
+            // Timeout for modal ready signal (ms) - safety net fallback
+            readyTimeout: 3000,
             // Allow closing by clicking backdrop
             closeOnBackdropClick: true,
             // Allow closing with Escape key
@@ -75,8 +76,8 @@
         slideout: {
             // Default width
             defaultWidth: '400px',
-            // Timeout for slideout ready signal (ms)
-            readyTimeout: 10000,
+            // Timeout for slideout ready signal (ms) - safety net fallback
+            readyTimeout: 3000,
             // Allow closing by clicking backdrop
             closeOnBackdropClick: true,
             // Allow closing with Escape key
@@ -858,16 +859,20 @@
             document.addEventListener('keydown', modalState.escapeHandler);
         }
 
-        // Handle iframe load
+        // Handle iframe load - always show content when iframe finishes loading.
+        // If the page sends MODAL_READY before load (via qurio-modal-helper.js),
+        // the spinner hides even earlier. The timeout is a safety net only.
         iframe.addEventListener('load', function() {
             log('Modal iframe loaded');
-            // If skipReady is true, show immediately on load
-            if (skipReady) {
-                log('skipReady enabled - showing iframe immediately');
+            if (loading.style.display !== 'none') {
+                log('Showing iframe on load event');
                 loading.style.display = 'none';
                 iframe.style.opacity = '1';
+                if (modalState.readyTimeout) {
+                    clearTimeout(modalState.readyTimeout);
+                    modalState.readyTimeout = null;
+                }
             }
-            // Otherwise, wait for MODAL_READY message from the iframe content
         });
 
         iframe.addEventListener('error', function() {
@@ -875,16 +880,14 @@
             loading.innerHTML = '<div class="qurio-modal-error"><div class="qurio-modal-error-icon">⚠️</div><div>Failed to load content</div></div>';
         });
 
-        // Set timeout for ready signal (only if not skipping ready)
-        if (!skipReady) {
-            modalState.readyTimeout = setTimeout(function() {
-                if (modalState.isOpen && loading.parentNode) {
-                    warn('Modal ready timeout - showing iframe anyway');
-                    loading.style.display = 'none';
-                    iframe.style.opacity = '1';
-                }
-            }, CONFIG.modal.readyTimeout);
-        }
+        // Safety net timeout in case load event doesn't fire
+        modalState.readyTimeout = setTimeout(function() {
+            if (modalState.isOpen && loading.parentNode) {
+                warn('Modal ready timeout - showing iframe anyway');
+                loading.style.display = 'none';
+                iframe.style.opacity = '1';
+            }
+        }, CONFIG.modal.readyTimeout);
 
         // Add to DOM
         document.body.appendChild(overlay);
@@ -1313,13 +1316,19 @@
             document.addEventListener('keydown', slideoutState.escapeHandler);
         }
 
-        // Handle iframe load
+        // Handle iframe load - always show content when iframe finishes loading.
+        // If the page sends SLIDEOUT_READY before load (via qurio-modal-helper.js),
+        // the spinner hides even earlier. The timeout is a safety net only.
         iframe.addEventListener('load', function() {
             log('Slideout iframe loaded');
-            if (skipReady) {
-                log('skipReady enabled - showing slideout iframe immediately');
+            if (loading.style.display !== 'none') {
+                log('Showing slideout iframe on load event');
                 loading.style.display = 'none';
                 iframe.style.opacity = '1';
+                if (slideoutState.readyTimeout) {
+                    clearTimeout(slideoutState.readyTimeout);
+                    slideoutState.readyTimeout = null;
+                }
             }
         });
 
@@ -1328,16 +1337,14 @@
             loading.innerHTML = '<div class="qurio-slideout-error"><div class="qurio-slideout-error-icon">⚠️</div><div>Failed to load content</div></div>';
         });
 
-        // Set timeout for ready signal (only if not skipping ready)
-        if (!skipReady) {
-            slideoutState.readyTimeout = setTimeout(function() {
-                if (slideoutState.isOpen && loading.parentNode) {
-                    warn('Slideout ready timeout - showing iframe anyway');
-                    loading.style.display = 'none';
-                    iframe.style.opacity = '1';
-                }
-            }, CONFIG.slideout.readyTimeout);
-        }
+        // Safety net timeout in case load event doesn't fire
+        slideoutState.readyTimeout = setTimeout(function() {
+            if (slideoutState.isOpen && loading.parentNode) {
+                warn('Slideout ready timeout - showing iframe anyway');
+                loading.style.display = 'none';
+                iframe.style.opacity = '1';
+            }
+        }, CONFIG.slideout.readyTimeout);
 
         // Add to DOM
         document.body.appendChild(overlay);

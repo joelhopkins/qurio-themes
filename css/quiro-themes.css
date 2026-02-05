@@ -446,11 +446,17 @@ html:not([data-ql-theme="none"]) nav.sidebar {
 /* Width override removed to use default HighLevel sidebar width */
 
 /* Agency Logo Container */
-html:not([data-ql-theme="none"]) .agency-logo-container {
-    background-color: rgba(255, 255, 255, 0.03) !important;
+html:not([data-ql-theme="none"]) div.agency-logo-container {
+    background-color: rgba(255, 255, 255, 0) !important;
     border-radius: var(--ql-radius) !important;
-    padding: var(--ql-space-4) !important;
-    margin-bottom: var(--ql-space-4) !important;
+    padding: var(--ql-space-0) !important;
+    margin-bottom: var(--ql-space-2) !important;
+}
+
+/* Agency Logo Container */
+html:not([data-ql-theme="none"]) .agency-logo-container img.agency-logo{
+    height:100px !important;
+    max-width:100% !important;
 }
 
 /* Location Switcher */
@@ -487,7 +493,7 @@ html:not([data-ql-theme="none"]) .hl_location_icon {
 /* Navigation Container */
 html:not([data-ql-theme="none"]) .hl_nav-header {
     background-color: transparent !important;
-    padding: var(--ql-space-2) var(--ql-space-3) !important;
+    padding: var(--ql-space-2) var(--ql-space-0) !important;
 }
 
 /* Section Labels (Settings, etc.) */
@@ -2127,17 +2133,15 @@ html:not([data-ql-theme="none"]) a.custom-link > span.h-5.w-5 {
     justify-content: center;
     flex-shrink: 0;
     padding-top: 2px !important;
-    margin-right: 0px !important;
+    margin-left: -10px !important;
 }
 
 html:not([data-ql-theme="none"]) a.custom-link > span.h-5.w-5 > i {
     font-size: 1.125rem;
     line-height: 1;
     color: var(--ql-sidebar-text);
-    opacity: 1;
     transition: opacity var(--ql-duration-fast) var(--ql-ease-out),
                 transform var(--ql-duration-fast) var(--ql-ease-out);
-    margin-left: -10px;
 }
 
 html:not([data-ql-theme="none"]) a.custom-link:hover > span.h-5.w-5 > i {
